@@ -1,0 +1,61 @@
+\section{The Bayesian Setting}\label{Se:bayes}
+
+Our starting point is to treat privacy enforcement as a classification problem, being the decision whether or not a given release point is legitimate. The instances are (runtime) release points. The labels are \emph{legitimate} and \emph{illegitimate}. Misclassification either yields a false alarm (mislabeling a legitimate point as \emph{illegitimate}) or a missed data leak (mislabeling an illegitimate point as \emph{legitimate}). 
+
+A popular classification method is based on Bayes' theorem (or rule). Given events $X$ and $Y$, Bayes' theorem states the following equality:
+\begin{equation}\label{Eq:bayes}
+	\Pr(Y | X) = \frac{\Pr(X | Y) \cdot \Pr(Y)}{\Pr(X)}
+\end{equation}
+where $\Pr(Y | X)$ is the conditional probability of $Y$ given $X$ (i.e., the probability for $Y$ to occur given that $X$ has occurred).
+%
+$X$ is referred to as the \emph{evidence}. 
+
+Given evidence $X$, the Bayesian classifier computes the conditional likelihood of each label (in our case, \emph{legitimate} and \emph{illegitimate}). The evidence may refer to qualitative criteria, such as source/sink data-flow reachability, but it can also refer to quantitative criteria, such as the degree of similarity between private values and values about to be released. These latter criteria are essential in going beyond the question of \emph{whether} private information is released to also reason about the \emph{amount} and \emph{form} of private information about to be released. 
+
+\subsection{Naive Bayes Algorithm}
+
+We begin with the formal background by stating \equref{bayes} more rigorously. Assume that $Y$ is a discrete-valued random variable, and let $X=\left[ X_1,\ldots,X_n \right]$ be a vector of $n$ discrete or real-valued attributes $X_i$. Then
+\begin{equation}\label{Eq:fullbayes}
+	\Pr(Y=y_k | X_1 \ldots X_n) = \frac{\Pr(Y=y_k) \cdot \Pr(X_1 \ldots X_n | Y=y_k)}{\Sigma_j \Pr(Y=y_j) \cdot \Pr(X_1 \ldots X_n | Y=y_j)}
+\end{equation}
+As \equref{fullbayes} hints, training a Bayesian classifier is, in general, impractical. Even in the simple case where the evidence $X$ is a vector of $n$ boolean attributes and $Y$ is boolean, we are still required to estimate a set
+$$
+	\theta_{ij} = \Pr(X=x_i|Y=y_j)
+$$
+of parameters, where $i$ assumes $2^n$ values and $j$ assumes 2 values for a total of $2 \cdot (2^n - 1)$ independent parameters.
+
+Naive Bayes deals with the intractable sample complexity by introducing the assumption of conditional independence, as stated in \defref{condind} below, which reduces the number of independent parameters sharply to $2n$. Intuitively, conditional independence prescribes that events $X$ and $Y$ are independent given knowledge that event $Z$ has occurred.
+
+\begin{definition}[Conditional Independence]\label{De:condind} Given random variables $X$, $Y$ and $Z$, we say that $X$ is \emph{conditionally independent} of $Y$ given $Z$ iff the probability distribution governing $X$ is independent of the value of $Y$ given $Z$. That is,
+$$
+	\forall i,j,k.\ \Pr(X=x_i | Y=y_j, Z=z_k) = \Pr(X = x_i | Z = z_k)
+$$
+\end{definition}
+
+Under the assumption of conditional independence, we obtain the following equality:
+\begin{equation}
+	\Pr(X_1 \ldots X_n | Y) = \Pi_{i=1}^{n} \Pr(X_i | Y)
+\end{equation}
+Therefore,
+\begin{equation}\label{Eq:condind}
+	\Pr(Y=y_k | X_1 \ldots X_n) = \frac{\Pr(Y=y_k) \cdot \Pi_i \Pr(X_i | Y=y_k)}{\Sigma_j \Pr(Y=y_j) \cdot \Pi_i \Pr(X_i | Y=y_j)}
+\end{equation}
+
+\subsection{Bayesian Reasoning about Leakage}
+
+For leakage detection, conditional independence translates into the requirement that at a release point $st$, the ``weight'' of evidence $e_1$ is not affected by the ``weight'' of evidence $e_2$ knowing that $st$ is legitimate/illegitimate. As an example, assuming the evidence is computed as the similarity between private and released values, if $st$ is known to be a statement sending private data to the network, then the similarity between the IMSI number and respective values about to be released is assumed to be independent of the similarity between location coordinates and respective values about to be released.
+
+The assumption of conditional independence induces a ``modular'' mode of reasoning, whereby the privacy features comprising the evidence are evaluated independently.
+This simplifies the problem of classifying a release point according to the Bayesian method into two quantities that we need to clarify and estimate: (i) the likelihood of legitimate/illegitimate release ($\Pr(Y=y_k)$) and (ii) the conditional probabilities $\Pr(X_i | Y=y_k)$.
+
+
+
+
+
+
+
+
+
+
+
+

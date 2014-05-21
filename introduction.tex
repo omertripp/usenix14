@@ -1,0 +1,86 @@
+\section{Introduction}\label{Se:introduction}
+
+Mobile apps frequently demand access to private information. This includes unique device and user identifiers, such as the phone number or IMEI number (identifying the physical device); social and contacts data; the user's location; audio (microphone) and video (camera) data; etc. While private information often serves the core functionality of an app, it may also serve other purposes, such as advertising, analytics or cross-application profiling~\cite{HHJSW:CCS11}. From the outside, the user is typically unable to distinguish legitimate usage of their private information from illegitimate scenarios, such as sending of the IMEI number to a remote advertising website to create a persistent profile of the user. 
+
+Existing platforms provide limited protection against privacy threats. Both the Android and the iOS platforms mediate access to private information via a permission model. Each permission is mapped to a designated resource, and holds per all application behaviors and resource accesses. In Android,  permissions are given or denied at installation time. In iOS, permissions are granted or revoked upon first access to the respective resource. Hence, both platforms cannot disambiguate legitimate from illegitimate usage of a resource once an app is granted the corresponding permission~\cite{HMNRSKZ:ASE13}.
+
+\paragraph{Threat Model} In this paper, we address privacy threats due to authentic (as opposed to malicious) mobile applications. We consider unauthorized release of private information that (almost) unambiguously identifies the user as being illegitimate, and thus a privacy threat. Illegitimate disclosure of private information arises in various use cases, such as social computing, analytics, advertising, cross-application profiling, etc. In these settings, mobile apps frequently perform access to, and release of, private information that is not required for their core business logic, and without user consent~\cite{LJ:SEC13}.
+
+While in general there is no bullet-proof solution for privacy enforcement, which can deal with any type of covert channel, implicit flow or proprietary data transformation, and even conservative enforcement approaches can easily be bypassed~\cite{SMBK:SECRYPT13}, there is strong evidence that authentic apps rarely exhibit these challenges. According to a recent study~\cite{HHJSW:CCS11}, and also our empirical data (presented in \secref{experiments}), private information is normally sent to independent third-party servers. Consequently, data items are released in clear form, or at most following well-known encoding/encryption transformations (like Base64 or MD5), to meet the requirement of a standard and general client/server interface. 
+
+The challenge, in this setting, is to determine whether the app has taken sufficient means to protect user privacy. Release of private information, even without user authorization, is still legitimate if only a small amount of information has been released. As an example, if an application obtains the full location of the user, but then releases to an analytics server only coarse information like the country or continent, then in most cases this would be perceived as legitimate.
+
+\paragraph{Privacy Enforcement via Taint Analysis} The shortcomings of mobile platforms in ensuring user privacy have led to a surge of research on realtime privacy monitoring. The foundational technique grounding this research is \emph{information-flow tracking}, often in the form of \emph{taint analysis}~\cite{TPFSW:PLDI09,NS:NDSS05}: Private data, obtained via privacy \emph{sources} (e.g. {\tt TelephonyManager.getSubscriberId()}, which reads the device's IMSI), is labeled with a taint tag denoting its source. The tag is then propagated along data-flow paths within the code. Any such path that ends up in a release point, or privacy \emph{sink} (e.g. {\tt WebView.loadUrl(...)}, which sends out an HTTP request), triggers a leakage alarm.
+
+The tainting approach effectively reduces leakage judgments to boolean reachability queries. This can potentially lead to false reports, as the real-world example shown in \figref{quantitative} illustrates. This code fragment, extracted from a core library in the Android platform, reads the device's IMSI number, and then either (ii) persists the full number to an error log if the number is invalid (the {\tt loge(...)} call), or (ii) writes a prefix of the IMSI (of length 6) to the standard log while carefully masking away the suffix (of length 9) as {\tt 'x'} characters. Importantly, data flow into the {\tt log(...)} sink is not a privacy problem, because the first 6 digits merely carry model and origin information. Distinctions of this sort are beyond the discriminative power of taint analysis~\cite{WCGHHJSW:HOTOS13}.
+
+\begin{figure}
+\begin{lstlisting}
+String mImsi = ...; // source
+// 6 digits <= IMSI (MCC+MNC+MSIN) <= 15 (usually 15)
+if (mImsi != null &&
+    (mImsi.length() < 6 || mImsi.length() > 15)) {
+  loge("invalid IMSI " + mImsi); // sink
+  mImsi = null; }
+log("IMSI: " + mImsi.substring(0, 6) + "xxxxxxxxx"); // sink 
+\end{lstlisting}
+\caption{\label{Fi:quantitative}Fragment from an internal Android library, {\tt com.android.internal.telephony.cdma.RuimRecords}, where a prefix of the mobile device's IMSI number flows into the standard log file}
+\end{figure}
+
+Quantitative extensions of the core tainting approach have been proposed to address this limitation. A notable example is McCamant and Ernst's~\cite{ME:PLDI08} information-flow tracking system, which quantities flow of secret information by dynamically tracking taint labels at the bit level. Other approaches --- based e.g. on distinguishability between secrets~\cite{BKR:SP09}, the rate of data transmission~\cite{L:CSFW02} or the influence inputs have on output values~\cite{NMS:PLAS09} --- have also been proposed. While these systems are useful as offline analyses, it is highly unlikely that any of them can be engineered to meet the performance requirements of a realtime monitoring solution due to the high complexity of their underlying algorithms. As an example, McCamant and Ernst report on a workload on which their analysis spent over an hour.
+
+\paragraph{Our Approach} We formulate data leakage as a classification problem, which generalizes the source/sink reachability judgment enforced by standard information-flow analysis, permitting richer and more relaxed judgments in the form of statistical classification. The motivating observation is that reasoning about information release is fuzzy in nature. While there are clear examples of legitimate versus illegitimate information release, there are also less obvious cases (e.g., a variant of the example in \figref{quantitative} with a 10- rather than 6-character prefix). A statistical approach, accounting for multiple factors and based on rich data sets, is better able to address these subtleties. 
+
+Concretely, we propose Bayesian classification. To label a release point as either legitimate or illegitimate, the Bayesian classifier refers to the ``evidence'' at that point, and computes the likelihood of each label given the evidence. The evidence consists of feature/value pairs.
+%
+There are many ways of defining the evidence. In this study, we concentrate on the data arguments flowing into release operations, though we intend to consider other classes of features in the future. (See \secref{conclusion}.) 
+
+Specifically, we induce features over the private values stored on the device, and evaluate these features according to the level of similarity between the private values and those arising at release points. This distinguishes instances where data that is dependent on private values flows into a release point, but its structural and/or quantitative characteristics make it eligible for release, from illegitimate behaviors. Failure to make such distinctions is a common source of false alarms by the tainting approach~\cite{EGCCJMS:OSDI10}.
+
+To illustrate this notion of features, we return to the example in \figref{quantitative}. Because the IMSI number is considered private, we define a respective feature \emph{IMSI}. Assume that the concrete IMSI value is ``404685505601234''. Then the value arising at the {\tt log(...)} release point is ``IMSI: 404685xxxxxxxxx''. The quantitative similarity between these two values serves as evidence for the decision whether or not {\tt log(...)} is behaving legitimately. This style of reasoning is depicted in \figref{imsiAnalysis}.
+
+\begin{figure}
+\begin{small}
+	\begin{align}
+		\xymatrix@R8pt@C4pt{
+			\texttt{mImsi = ...;}\ar@{-}[r]\ar@/_2pc/[dd]_{\text{similarity: 0.4=6/15}} & \texttt{"404685505601234"}\ar@{->}[d]^{\text{similarity: 1.0=15/15}} \\
+			\texttt{loge(...);}\ar@{-}[r] &  \texttt{"invalid IMSI 404685505601234"} \\
+			\texttt{log(...);}\ar@{-}[r] & \texttt{"IMSI: 404685xxxxxxxxx"} \\
+		} \nonumber
+	\end{align}
+\end{small}
+\caption{\label{Fi:imsiAnalysis}Similarity analysis applied to the code in \figref{quantitative}}
+\end{figure}
+
+\paragraph{Evaluation} To evaluate our approach, we have implemented the \Tool\ system for privacy enforcement. \Tool\ is to be featured in the coming version of a commercial product 
+%--- 
+%[name omitted for double-blind review]
+%IBM Security AppScan Standard Edition V9.0 
+%--- 
+that performs security assessment of web and mobile applications. We report on two sets of experiments over \Tool.
+
+First, to measure the accuracy gain thanks to Bayesian analysis, we compared \Tool\ with the TaintDroid system~\cite{EGCCJMS:OSDI10}, a highly popular and mature implementation of the tainting approach that is considered both efficient (with average overhead of approximately 10\%) and accurate. We applied both \Tool\ and TaintDroid to the 
+DroidBench suite,\footnote{\href{http://sseblog.ec-spride.de/tools/droidbench/}{http://sseblog.ec-spride.de/tools/droidbench/}} which comprises the most mature and comprehensive set of privacy benchmarks currently available. The results suggest dramatic improvement in accuracy thanks to Bayesian elimination of false reports, yielding accuracy scores of 0.96 for \Tool\ versus 0.69 for TaintDroid.
+
+The second experiment examines the practical value of \Tool\ by applying it to 54 top-popular mobile apps from Google Play. We evaluate two variants of \Tool, one of which is able to detect a total of 64 distinct instances of illegitimate information release across 26 of the applications with only 1 false alarm.
+
+\paragraph{Contributions} This paper makes the following principal contributions:
+\begin{compactenum}
+	\item Novel approach to leakage detection (\secref{bayes}): We present a Bayesian classification alternative to the classic tainting approach. Our approach is more flexible than taint 
+	tracking by permitting statistical weighting of different features as the basis for privacy judgments.
+	\item Similarity-based reasoning (\secref{algorithm}): We instantiate the Bayesian approach by applying quantitative similarity judgments over private values and values 
+	about to be released. This enables consideration of actual data, rather than only data flow, as evidence for privacy judgments.
+	\item Implementation and evaluation (\secrefs{bayesalg}{experiments}): We have instantiated our approach as the \Tool\ system, which is about to be featured in a leading security product. We report on two sets of experiments, whose results (i) demonstrate substantial accuracy gain thanks to Bayesian reasoning, and (ii) substantiate the overall effectiveness of \Tool\ when applied to real-world apps. All the leakage reports by \Tool\ are publicly available for scrutiny.\footnote{
+		\href{https://www.dropbox.com/sh/ggrcvqsbkiubmlb/faSUXmr9xK}{https://www.dropbox.com/sh/ggrcvqsbkiubmlb/faSUXmr9xK}
+		%\href{researcher.ibm.com/researcher/files/us-otripp/Artifacts.zip}{researcher.ibm.com/researcher/files/us-otripp/Artifacts.zip}
+	}
+\end{compactenum}
+
+
+
+
+
+
+
+
+ 

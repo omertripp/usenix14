@@ -1,0 +1,88 @@
+\newcommand{\InTech}[1]{}
+\newcommand{\InPaper}[1]{#1}
+
+\newcommand{\COMMENT}[1]{\textbf{[#1]}\\}
+%\newcommand{\COMMENT}[1]{}
+\newcommand{\TODO}[1]{\textbf{[TODO: #1]}\\}
+%\newcommand{\TODO}[1]{}
+\newcommand{\DONE}[1]{}
+\newcommand{\CBD}[1]{}
+\newcommand{\ignore}[1]{}
+
+\newcommand\osays[1]{\todo[color=green!40]{{\bf O says:} #1}}
+\newcommand\msays[1]{\todo[color=red!40]{{\bf M says:} #1}}
+\newcommand\esays[1]{\todo[color=blue!40]{{\bf E says:} #1}}
+\newenvironment{itemize*}%
+  {\begin{itemize}%
+    \setlength{\itemsep}{0.0in}%
+    \setlength{\topsep}{0.0in}%
+    \setlength{\parskip}{0.0in}}%
+  {\end{itemize}}
+\newenvironment{enumerate*}%
+  {\begin{enumerate}%
+    \setlength{\itemsep}{0.0in}%
+    \setlength{\topsep}{0.0in}%
+    \setlength{\parskip}{0.0in}}%
+  {\end{enumerate}}
+
+\newcommand{\ie}{i.e.}
+\newcommand{\eg}{e.g.}
+
+\newcommand{\lr}{\left\langle}
+\newcommand{\rr}{\right\rangle}
+
+%% references definition
+\newcommand{\figref}[1]{Figure~\ref{Fi:#1}}
+\newcommand{\figrefs}[2]{Figures~\ref{Fi:#1}--\ref{Fi:#2}}
+\newcommand{\tableref}[1]{Table~\ref{Ta:#1}}
+\newcommand{\secref}[1]{Section~\ref{Se:#1}}
+\newcommand{\secrefs}[2]{Sections~\ref{Se:#1}--\ref{Se:#2}}
+\newcommand{\appendixref}[1]{Appendix~\ref{Se:#1}}
+\newcommand{\defref}[1]{Definition~\ref{De:#1}}
+\newcommand{\lemref}[1]{Lemma~\ref{Lm:#1}}
+\newcommand{\propref}[1]{Proposition~\ref{Prop:#1}}
+\newcommand{\exampleref}[1]{Example~\ref{Ex:#1}}
+\newcommand{\equref}[1]{Equation~\ref{Eq:#1}}
+\newcommand{\cndref}[1]{Condition~\ref{Cn:#1}}
+\newcommand{\thmref}[1]{Theorem~\ref{Th:#1}}
+\newcommand{\problemref}[1]{Problem~\ref{Pr:#1}}
+\newcommand{\algref}[1]{Algorithm~\ref{Al:#1}}
+\newcommand{\obsref}[1]{Observation~\ref{Ob:#1}}
+
+\newcommand{\ind}{\textcolor{white}{$-$}}
+\newcommand{\largeind}{\textcolor{white}{$--$}}
+
+\newcommand{\setcomp}[2]{\left\{ #1 \;|\; #2 \right\}}
+\renewcommand{\ln}[1]{{\tiny [#1]}}
+
+\newenvironment{closeenumerate}{\begin{list}{\arabic{enumi}.}%
+{\usecounter{enumi} \setlength{\itemsep}{0in} \setlength{\parsep}{0in}
+\setlength{\topsep}{1ex}}
+\def\makelabel##1{\hss\llap{##1}}}%
+{\end{list}}
+
+\newenvironment{closeenumerateii}{\begin{list}{\arabic{enumii}.}%
+{\usecounter{enumii} \setlength{\itemsep}{0in} \setlength{\parsep}{0in}
+\setlength{\topsep}{1ex}}
+\def\makelabel##1{\hss\llap{##1}}}%
+{\end{list}}
+
+\newenvironment{closeitemize}{\begin{list}{\small $\bullet$}%
+{\usecounter{enumiv} \setlength{\itemsep}{0in} \setlength{\parsep}{0in}
+\setlength{\topsep}{1ex}}
+\def\makelabel##1{\hss\llap{##1}}}%
+{\end{list}}
+
+\newtheorem{theorem}{Theorem}[section] 
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{property}{Property}[section]
+\newtheorem{example}[equation]{Example}
+\newtheorem{algorthm}[theorem]{Algorithm}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{observation}[theorem]{Observation}
+
+\newcommand\sem[2]{[\![ #1 ]\!] #2}

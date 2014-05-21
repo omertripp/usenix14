@@ -1,0 +1,120 @@
+\section{Computing Feature Values}\label{Se:analysis}
+
+
+Dealing with compound private values (e.g., location): break into atomic features...
+
+Dealing with encryption, etc... 
+
+Our approach to the problem of leakage detection is a departure from taint analysis, the mainstream technique for dynamic enforcement of integrity and confidentiality properties~\cite{ME:PLDI08,CLO:ISSTA07,CSL:CCS08,NS:NDSS05}, which models data coarsely as either tainted or untainted, and propagates taint labels as part of the evaluation of program statements. In our approach, the analysis is centered exclusively on data values arising at designated program points while abstracting away intermediate steps and behaviors of the program. Thus, instead of the traditional check for data-flow reachability between sources and sinks, \Tool\ checks for proximity between their respective data values. Throughout this section, we discuss the advantages --- and also the limitations --- of our approach, and contrast it with taint analysis.
+
+\subsection{Core Features: Quantitative Reasoning and Overhead}
+
+We take a data-centric approach to the problem of leakage detection, which stems from our view of leakage judgments as quantitative queries over data values rather than boolean (or qualitative) reachability queries. \figref{quantitative} motivates this observation, as discussed earlier: The determination whether writing a prefix of the IMSI number to the log constitutes a leakage problem depends on the number of logged digits. Taint analysis is too coarse to capture such distinctions. However, quantitative reasoning carries advantages beyond suppressing false alarms:
+\begin{compactitem}
+	\item Prioritization: The reported leakage instances can be ordered according to their severity, measured in terms of the distance between the source and sink values. As an example, full release of the IMSI number is more severe than 
+	releasing only the first six digits.
+	\item Configurability: The user is given control of the analysis' conservativeness by setting the similarity threshold. If, for instance, the analysis suffers from low signal-to-noise ratio at a given threshold value, then the user can increase the 
+	threshold, thereby blocking away ``low-confidence'' alarms. This type of user control, which is essential for the adoption and usability of the analysis, is not available for taint analysis.
+\end{compactitem} 
+
+\noindent Another important advantage of data-centric reasoning is that the runtime overhead of the analysis is dramatically reduced. While sources and sinks form a small fraction of all program statements, taint analysis must account for any form of data flow for sound propagation of taint labels. Management of the taint labels themselves is also a source of memory bloat and runtime overhead. For this reason, state-of-the-art tools like TaintDroid maintain coarse-grained taint tags, leading e.g. to a false alarm on the example in \figref{hashmap}, as we confirmed in our experiments with TaintDroid. (See \secref{accuracy}.) The reason for this false alarm is that the entire contents of the {\tt hmap} dictionary is mapped by TaintDroid to a single taint bit. The same is true of arrays and other {\tt Collection} data types like {\tt Set} and {\tt List}. In our approach, instead, analysis overhead is restricted to source and sink invocation points, obviating the need for engineering optimizations of this sort, which reduce the precision of the analysis, complicate its design and implementation, and limit its extensibility and portability.
+
+\begin{figure}
+\begin{small}
+{\tt TelephonyManager tm = getSystemService(TELEPHONY\_SERVICE);} \\
+{\tt String imei = tm.getDeviceId(); {\color{green} //source}} \\
+{\tt Map<String,String> hmap = {\color{blue} new} HashMap<String,String>();} \\
+{\tt hmap.put({\color{purple} "t"}, deviceId);} \\
+{\tt hmap.put({\color{purple} "ut"}, {\color{purple} "Hello World"}); ...;} \\
+{\tt String msg = hmap.get({\color{purple} "ut"});} \\
+{\tt sms.sendTextMessage({\color{purple} "+49"}, {\color{blue} null}, msg, ...); {\color{green} // sink}}
+\end{small}
+\caption{\label{Fi:hashmap} Fragment from DroidBench {\tt HashMapAccess1} benchmark: Benign flow of information through a {\tt Map} object}
+\end{figure}
+
+\subsection{Advanced Features: Implicit and Stored Flows}
+
+The data-centric approach of \Tool\ also facilitates handling of advanced leakage scenarios, and in specific implicit flows~\cite{SM:SAC03,ME:PLDI08} and stored leakage vulnerabilities~\cite{KGJE:ICSE09}.  An implicit flow arises when there is no direct data-flow path connecting between the source and the sink. This situation is illustrated in \figref{implicitFlow}, where instead of directly appending characters from {\tt imei} to {\tt implicitIMEI}, the respective (untainted) constant is appended. This coding idiom occurs in practice, e.g. in sanitizer methods~\cite{TPT:ISSTA11}, but cannot be accounted for by the core tainting approach~\cite{F:CJ74,MPL:SRE:04}. Data-centric reasoning transcends breakages of this kind in data flow.
+
+\begin{figure}
+\begin{small}
+{\tt TelephonyManager tm = getSystemService(TELEPHONY\_SERVICE);} \\
+{\tt String imei = tm.getDeviceId(); {\color{green} //source}} \\
+{\tt String implicitIMEI = "";} \\
+{\tt for (char c : imei.toCharArray()) \{ switch(c) \{} \\
+\ind{\tt case {\color{purple} '0'}: implicitIMEI += {\color{purple} '0'};} \\
+\ind{\tt case {\color{purple} '1'}: implicitIMEI += {\color{purple} '1'}; ...; \} \}} \\
+{\tt Log.i(implicitIMEI); {\color{green} // sink}}
+\end{small}
+\caption{\label{Fi:implicitFlow} Adaptation of DroidBench {\tt Loop1} benchmark: Implicit release of device ID}
+\end{figure}
+
+Stored vulnerabilities are another challenge for taint analysis that often arises in practice. A stored vulnerability is one where the secret data is first persisted to a data store (e.g., the file system or a database), and then read and released as part of a later control flow. The code in \figref{stored} illustrates this challenge. The {\tt onCreate} method persists the device's IMEI number to a private file. Later, method {\tt onResume} reads the file and releases its contents as a text message. Precise taint tracking over stored flows mandates tainting of files and other storage media, which limits the portability of the analysis and complicates its implementation. Data-centric judgments, instead, enable lightweight and direct handling of stored flows, whereby information flows into, and out of, data stores are correlated based on similarity between data values. These are available within the scope of the program, obviating the need to instrument external storage like the file system. We illustrate this idea in \figref{compositionExample}.
+
+\begin{figure}
+\begin{small}
+{\tt {\color{purple} protected void} onCreate(Bundle savedInstanceState) \{ ...;} \\
+\ind{\tt TelephonyManager tm = getSystemService(TELEPHONY\_SERVICE);} \\
+\ind{\tt String imei = tm.getDeviceId(); {\color{green} /* source */} ...;} \\
+\ind{\tt FileOutputStream fos = openFileOutput(..., MODE\_PRIVATE);} \\
+\ind{\tt fos.write(imei.getBytes();} \\
+\ind{\tt fos.close(); ...; \}} \\
+{\tt } \\
+{\tt {\color{purple} protected void} onResume() \{ ...;} \\ 
+\ind{\tt FileInputStream fis = openFileInput(...);} \\
+\ind{\tt byte[] buf = {\tt blue new} byte[256]; ...;} \\
+\ind{\tt fis.read(buf);} \\
+\ind{\tt fis.close(); ...;} \\
+\ind{\tt String msg = {\color{blue} new} String(but).trim();} \\
+\ind{\tt sms.sendTextMessage({\color{purple} "+49"}, {\color{blue} null}, msg, ...); {\color{green} // sink}}
+\end{small}
+\caption{\label{Fi:stored} Fragment from DroidBench {\tt PrivateDataLeak3} benchmark: Data leakage manifesting across two control flows}
+\end{figure}
+
+\begin{figure}
+\begin{small}
+	\begin{align}
+		\xymatrix@R8pt@C4pt{
+						  & \text{\color{white} -}\ar@{-}[dd] \\
+			\texttt{onCreate} &  & \texttt{imei = tm.getDeviceId();}\ar@{-}[r] & \texttt{"490154203237518"}\ar@{->}[d]^{\text{1.0}}\ar@/^5pc/[ddddd]_{\text{similarity: 1.0}} \\ 
+						  & \text{\color{white} -} & \texttt{fos.write(...);}\ar@{-}[r] &  \texttt{"490154203237518"}\ar@{.>}[dd]^{\text{1.0}} \\
+						  & \text{\color{white} -}\ar@{-}[dddd] \\
+			\texttt{onResume} &  & \texttt{fis.read(...);}\ar@{-}[r] & \texttt{"490154203237518"}\ar@/^1.5pc/[dd]^{\text{1.0}} \\ 
+						  & & \texttt{sms.sendTextMessage(...);}\ar@{-}[r]\ar@{-}[dr]\ar@{-}[ddr] &  \texttt{"+49"} \\
+						  &  &  &  \texttt{"490154203237518"} \\
+						  &  \text{\color{white} -} &  &  \texttt{...} \\
+		} \nonumber
+	\end{align}
+\end{small}
+	\caption{\label{Fi:compositionExample}Composition of partial leakage scenarios using similarity analysis for the code in \figref{stored}}
+\end{figure}
+
+\subsection{Challenges and Limitations}\label{Se:limitations}
+
+Alongside the advantages listed above, our approach also entails challenges. First and foremost is the question of how to account for data transformations, such as hashing (e.g., SHA-1 or MD5), encoding (e.g., Base64 or hex), encryption (e.g., AES) and obfuscation (e.g., rotation or XOR).
+Pair $v$ and $v'$ of values, such that $v$ is read by a source and $v'$ is the result of encrypting or encoding $v$, are no longer similar in any simple sense, and so leakage of $v'$ may be missed by our approach. As an illustration, we refer to \figref{dataTransform}. Here there is clear correspondence between the input and output values, e.g. {\tt "123"} and {\tt "abc"}, but standard string metrics would consider these values as completely distinct from each other.
+
+\begin{figure}
+\begin{small}
+{\tt TelephonyManager tm = getSystemService(TELEPHONY\_SERVICE);} \\
+{\tt String imei = tm.getDeviceId(); {\color{green} //source}} \\
+{\tt String obfuscatedIMEI = obfuscateIMEI(imei); ...;} \\
+{\tt Log.i(imei); {\color{green} // sink}} \\
+{\tt } \\
+{\tt {\color{purple} private} String obfuscateIMEI(String imei) \{} \\
+\ind{\tt String result = "";} \\
+\ind{\tt for (char c : imei.toCharArray()) \{ switch(c) \{} \\
+\ind{\tt case {\color{purple} '0'}: result += {\color{purple} 'a'}; break;} \\
+\ind{\tt case {\color{purple} '1'}: result += {\color{purple} 'b'}; break;} \\
+\ind{\tt case {\color{purple} '2'}: result += {\color{purple} 'c'}; break; ...; \} \}}
+\end{small}
+\caption{\label{Fi:dataTransform} Fragment from DroidBench {\tt ImplicitFlow1} benchmark: Release of obfuscated data}
+\end{figure}
+
+Though this is a justified concern from a theoretical standpoint, the data we obtained from over 50 highly popular real-world apps, described in \secref{practical}, indicates that such transformations are not common in practice. Our analysis of the data suggests, in line with other studies~\cite{HHJSW:CCS11}, that this is because typically private information is sent to independent advertisement and analytics servers, and so --- in the absence of a proprietary protocol between the app and the server --- the data is either sent in the clear or transformed using a standard encoding/encryption method.
+%
+Our approach can easily be extended to account for standard transformations (like Base64 and MD5) by recording not only the concrete data values arising at sources but also their respective transformed values. This reduction technique preserves our original algorithm while mitigating misses due to standard transformation methods. We haven't implemented this functionality for lack of empirical justification, as noted above, but stress that this extension is straightforward to implement.
+
+%Two other challenges are (i) which data values to record and at what granularity, and (ii) how to quantify the similarity between a pair of values. We return to these questions later, in \secrefs{getdata}{computedist}, where we describe the \Tool\ algorithm in detail. 
+
+Two other challenges, which we addressed in \secrefs{getdata}{computedist} as part of our description of the \Tool\ algorithm, are (i) which data values to record and at what granularity, and (ii) how to quantify the similarity between a pair of values. While our design choices work well in practice (see \secref{experiments}), we view these questions as worthy of further investigation.

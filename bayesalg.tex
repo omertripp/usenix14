@@ -1,0 +1,108 @@
+\section{The \Tool\ Algorithm}\label{Se:bayesalg}
+
+In this section, we describe the complete \Tool\ algorithm. We then discuss enhancements of the core algorithm.
+
+\subsection{Pseudocode Description}
+
+\algref{featureAlg} summarizes the main steps of \Tool. For simplicity, the description in \algref{featureAlg} assumes that source statements serve private data as their return value, though the \Tool\ implementation also supports other sources (e.g., callbacks like \texttt{onLocationChanged($\ldots$)}, where the private \texttt{Location} object is passed as a parameter). We also assume that each source maps to a unique privacy feature. Hence, when a source is invoked (i.e., the \texttt{OnSourceStatement} event fires), we obtain the unique tag corresponding to its respective feature via the 
+\texttt{GetFeature($\ldots$)} function. We then attach the tag to the return value $r$. Normal data flow obeys the standard rules of tag propagation, which 
+are provided e.g. by Enck et al.~\cite{EGCCJMS:OSDI10}. (See Table 1 there.)
+
+When an \texttt{OnSinkStatement} event is triggered, the arguments flowing into the sink \texttt{snk} are searched for privacy tags, and a mapping from features $f$ to parameters $p_f$ carrying the respective tag is built. The value of $f$  is then computed as the minimal pairwise distance between the parameters $p \in p_f$
+and {\tt ref}\ $f$. If this value is greater than some constant $c_f$ defined for $f$, then the privileged value ``$\geq c_f$'' is assigned to $f$. (See \secref{featext}.) Finally, the judgment \texttt{IsLeakageClassification} is applied over the features whose tags have reached the sink \texttt{snk}. This judgment is executed according to \equref{condind}.
+
+\begin{algorithm}[t]
+\begin{small}
+\DontPrintSemicolon
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwFunction{SrcEvent}{OnSourceStatement}
+\SetKwFunction{SnkEvent}{OnSinkStatement}
+\SetKwFunction{NormEvent}{OnNormalStatement}
+\SetKwFunction{GetFeature}{GetFeature}
+\SetKwFunction{ExtTags}{ExtractTags}
+\SetKwFunction{Alarm}{Alarm}
+\SetKwFunction{IsLeak}{IsLeakageClassification}
+\KwIn{${\bf S}$ \tcp*[h]{privacy specification}}\;
+\Begin{
+	\While{\true}{
+		\SrcEvent\ {\tt $r$ := src $\overline{p}$ $\colon$}\; \Indp
+			\tcp*[h]{map source to feature}\;
+			$f$ $\longleftarrow$ \GetFeature\ {\tt src}\;
+			\emph{attach tag $f$ to $r$}\; \Indm
+		\NormEvent\ {\tt $r$ := nrm $\overline{p}$ $\colon$}\; \Indp
+			\emph{propagate feature tags according to data flow}\; \Indm
+		\SnkEvent\ {\tt $r$ := snk $\overline{p}$ $\colon$}\; \Indp
+		 	\tcp*[h]{map feat.s to param.s with resp. tag}\;
+			$\{ f \mapsto \overline{p_f} \} \longleftarrow \ExtTags\ \overline{p}$\; 
+			\ForEach{$f \rightarrow \overline{p_f} \in \{ f \rightarrow \overline{p_f} \}$}{
+				$u$ $\longleftarrow$ {\tt ref}\ $f$\;
+				$\delta \longleftarrow \min \{ d(u,\lsyn p \rsyn) \}_{p \in \overline{p_f}}$\;
+				$f \longleftarrow \delta \geq c_f\ ?\ \text{``}\geq_{c_f}\text{''} \colon \delta$\;	
+			}
+			\If{$\IsLeak\ \{ f \}$}{
+				\Alarm\ {\tt snk} $\overline{p}$\;
+			}				
+	}
+}
+\end{small}
+\caption{\label{Al:featureAlg}Outline of the core \Tool\ algorithm}
+\end{algorithm}
+
+\subsection{Enhancements}\label{Se:points}
+
+We conclude our description of \Tool\ by highlighting two extensions of the core algorithm.
+
+\paragraph{Data Transformations} As noted earlier, in \secref{introduction}, private information is sometimes released following standard hashing/encoding transformations, such as the Base64 scheme~\cite{HHJSW:CCS11}. This situation, illustrated in \figref{encodedFlow}, can distort feature values, thereby leading \Tool\ to erroneous judgments. Fortunately, the transformations that commonly manifest in leakage scenarios are all standard, and there is a small number of such transformations. 
+
+\begin{figure}
+\begin{lstlisting}
+TelephonyManager tm =
+    getSystemService(TELEPHONY_SERVICE);
+String imei = tm.getDeviceId(); // source
+String encodedIMEI = Base64Encoder.encode(imei);
+Log.i(encodedIMEI); // sink
+\end{lstlisting}
+\caption{\label{Fi:encodedFlow} Adaptation of the DroidBench {\tt Loop1} benchmark, which releases the device ID following Base64 encoding}
+\end{figure}
+
+To account for these transformations, \Tool\  applies each of them to the value obtained at a source statement, thereby exploding the private value into multiple representations. This is done lazily, once a sink is reached, for performance. This enhancement is specified in pseudocode form in \algref{transform}. The main change is the introduction of a loop that traverses the transformations $\tau \in \Tau$, where the identity transformation, $\lambda x.\ x$, is included to preserve the (non-transformed) value read at the source. The value assigned to feature $f$ is then the minimum with respect to all transformed values.
+
+\begin{algorithm}[t]
+\begin{small}
+\DontPrintSemicolon
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwFunction{SrcEvent}{OnSourceStatement}
+\SetKwFunction{SnkEvent}{OnSinkStatement}
+\SetKwFunction{NormEvent}{OnNormalStatement}
+\SetKwFunction{GetFeature}{GetFeature}
+\SetKwFunction{ExtTags}{ExtractTags}
+\SetKwFunction{Alarm}{Alarm}
+\SetKwFunction{IsLeak}{IsLeakageClassification}
+\KwIn{$\Tau \equiv \{ \lambda x.\ x,\tau_1,\ldots,\tau_n \}$ \tcp*[h]{std. transformations}}\;
+\Begin{
+		$\ldots$\;
+		\SnkEvent\ {\tt r := snk $\overline{p}$ $\colon$}\; \Indp
+		$\{ f \mapsto \overline{p_f} \} \longleftarrow \ExtTags\ \overline{p}$\; 
+		\ForEach{$f \rightarrow \overline{p_f} \in \{ f \rightarrow \overline{p_f} \}$}{
+			\ForEach{$\tau \in \Tau$}{
+				$u$ $\longleftarrow$ $\tau$ ({\tt ref}\ $f$)\;
+				$\delta \longleftarrow \min \{ d(u,\lsyn p \rsyn) \}_{p \in \overline{p_f}}$\;
+				$f \longleftarrow \min\{ \lsyn f \rsyn, \delta \geq c_f\ ?\ \text{``}\geq_{c_f}\text{''} \colon \delta \}$\;	
+			}
+		} \Indm
+		$\ldots$\;				
+}
+\end{small}
+\caption{\label{Al:transform}\Tool\ support for standard data transformations}
+\end{algorithm}
+
+\paragraph{Heuristic Detection of Relevant Values} So far, our description of the \Tool\ algorithm has relied on tag propagation to identify relevant values at the sink statement. While this is a robust mechanism to drive feature computation, flowing tags throughout the code also has its costs, incurring runtime overheads of $\geq 10\%$ and affecting the stability of the application due to intrusive instrumentation~\cite{EGCCJMS:OSDI10}.
+
+These weaknesses of the tainting approach have led us to investigate an alternative method of detecting relevant values. A straightforward relaxation of data-flow tracking is ``brute-force'' traversal of the reachable values from the arguments to a sink statement up to some depth bound $k$. Though in theory this might introduce both false positives (due to irrelevant values that are incidentally similar to the reference value) and false negatives (if $k$ is too low, blocking relevant values from view), in practice both are unlikely, as we confirmed experimentally. (See \secref{experiments}.) 
+
+For false positives, private values are often unique, and so incidental similarity to irrelevant values is improbable. For false negatives, the arguments flowing into privacy sinks are typically either {\tt String} objects or simple data structures. Also, because the number of privacy sinks is relatively small, and the number of complex data structures accepted by such sinks is even smaller, it is possible to specify relevant values manually for such data structures. We have encountered only a handful of data structures (e.g., the \texttt{android.content.Intent} class) that motivate a specification. 
+
+
+
