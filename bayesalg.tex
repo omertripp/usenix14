@@ -53,7 +53,9 @@ and {\tt ref}\ $f$. If this value is greater than some constant $c_f$ defined fo
 
 We conclude our description of \Tool\ by highlighting two extensions of the core algorithm.
 
-\paragraph{Data Transformations} As noted earlier, in \secref{introduction}, private information is sometimes released following standard hashing/encoding transformations, such as the Base64 scheme~\cite{HHJSW:CCS11}. This situation, illustrated in \figref{encodedFlow}, can distort feature values, thereby leading \Tool\ to erroneous judgments. Fortunately, the transformations that commonly manifest in leakage scenarios are all standard, and there is a small number of such transformations. 
+\paragraph{Beyond Plain Text} \OC{While many instances of illegitimate information release involve plain text, and can be handled by the machinery in \secref{featext}, there are also more challenging scenarios. Two notable challenges are (i) data transformations, whereby data is released following an encoding, encryption or hashing transformation; and (ii) high-volume binary data, such as camera or microphone output. We have extended \Tool\ to address both of these cases.}
+
+\OC{We begin with data transformations.} As noted earlier, in \secref{introduction}, private information is sometimes released following standard hashing/encoding transformations, such as the Base64 scheme. This situation, illustrated in \figref{encodedFlow}, can distort feature values, thereby leading \Tool\ to erroneous judgments. Fortunately, the transformations that commonly manifest in leakage scenarios are all standard, and there is a small number of such transformations~\cite{HHJSW:CCS11}.
 
 \begin{figure}
 \begin{lstlisting}
@@ -67,6 +69,8 @@ Log.i(encodedIMEI); // sink
 \end{figure}
 
 To account for these transformations, \Tool\  applies each of them to the value obtained at a source statement, thereby exploding the private value into multiple representations. This is done lazily, once a sink is reached, for performance. This enhancement is specified in pseudocode form in \algref{transform}. The main change is the introduction of a loop that traverses the transformations $\tau \in \Tau$, where the identity transformation, $\lambda x.\ x$, is included to preserve the (non-transformed) value read at the source. The value assigned to feature $f$ is then the minimum with respect to all transformed values.
+
+\OC{Binary data --- originating from the microphone, camera or bluetooth adapter --- also requires special handling because of the binary versus ASCII representation and, more significantly, its high volume. Our solution is guided by the assumption that such data is largely treated as ``uninterpreted'' and immutable by application code due to its form and format. This leads to a simple yet effective strategy for similarity measurement, whereby a fixed-length prefix is sampled out of the binary content. Sampling is also applied to sink arguments consisting of binary data.}
 
 \begin{algorithm}[t]
 \begin{small}
@@ -100,7 +104,9 @@ To account for these transformations, \Tool\  applies each of them to the value 
 
 \paragraph{Heuristic Detection of Relevant Values} So far, our description of the \Tool\ algorithm has relied on tag propagation to identify relevant values at the sink statement. While this is a robust mechanism to drive feature computation, flowing tags throughout the code also has its costs, incurring runtime overheads of $\geq 10\%$ and affecting the stability of the application due to intrusive instrumentation~\cite{EGCCJMS:OSDI10}.
 
-These weaknesses of the tainting approach have led us to investigate an alternative method of detecting relevant values. A straightforward relaxation of data-flow tracking is ``brute-force'' traversal of the reachable values from the arguments to a sink statement up to some depth bound $k$. Though in theory this might introduce both false positives (due to irrelevant values that are incidentally similar to the reference value) and false negatives (if $k$ is too low, blocking relevant values from view), in practice both are unlikely, as we confirmed experimentally. (See \secref{experiments}.) 
+These weaknesses of the tainting approach have led us to investigate an alternative method of detecting relevant values. A straightforward relaxation of data-flow tracking is \OC{bounded} (``brute-force'') traversal of the reachable values from the arguments to a sink statement up to some depth bound $k$: \OC{All values pointed-to by a sink argument or reachable from 
+a sink argument via a sequence of $\leq k$ field dereferences are deemed relevant.}
+Though in theory this might introduce both false positives (due to irrelevant values that are incidentally similar to the reference value) and false negatives (if $k$ is too small, blocking relevant values from view), in practice both are unlikely, as we confirmed experimentally. (See \secref{experiments}.) 
 
 For false positives, private values are often unique, and so incidental similarity to irrelevant values is improbable. For false negatives, the arguments flowing into privacy sinks are typically either {\tt String} objects or simple data structures. Also, because the number of privacy sinks is relatively small, and the number of complex data structures accepted by such sinks is even smaller, it is possible to specify relevant values manually for such data structures. We have encountered only a handful of data structures (e.g., the \texttt{android.content.Intent} class) that motivate a specification. 
 

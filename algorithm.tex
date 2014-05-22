@@ -99,12 +99,14 @@ Given string metric $d(x,y)$ and pair $(u,v)$ of reference value $u$ and relevan
 \KwData{Distance metric $d$}
 \BlankLine
 \Begin{
-	$x \longleftarrow \Min(u,v)$\;
-	$y \longleftarrow \Max(u,v)$\;
+	$x \longleftarrow |u| < |v|\ ?\ u\ \colon\ v$\;
+	$y \longleftarrow |u| \geq |v|\ ?\ u\ \colon\ v$\;
 	$r \longleftarrow y$\;
 	\For{$i = 0$ {\bf to} $|y|-|x|$}{
 		$y' \longleftarrow y[i,i+|x|-1]$\;
-		$r \longleftarrow \Min(r,d(x,y'))$\;
+		\If{$d(x,y') < r$}{
+			$r \longleftarrow d(x,y')$\;	
+		}
 	}
 	\Return{r}\;
 }
@@ -112,8 +114,11 @@ Given string metric $d(x,y)$ and pair $(u,v)$ of reference value $u$ and relevan
 \caption{\label{Al:normalized}The \Tool\ distance measurement algorithm}
 \end{algorithm}
 
-To ensure that comparisons are still meaningful under length adjustment, we decompose private values into indivisible \emph{information units}. These are components of the private value that cannot be broken further, and so comparing them with a shorter value mandates that the shorter value be padded. In our specification, the phone, IMEI and IMSI numbers consist of only one unit of information. The {\tt Location} object consists of several distinct information units, which include the longitude, latitude, bearing, etc. The notion of information units guards \Tool\ against ill-founded judgments, such as treating release of a single digit from the IMEI number as strong evidence for leakage.
-
+To ensure that comparisons are still meaningful under length adjustment, we decompose private values into indivisible \emph{information units}. These are components of the private value that cannot be broken further, and so comparing them with a shorter value mandates that the shorter value be padded. In our specification, the phone, IMEI and IMSI numbers consist of only one unit of information. 
+%
+The {\tt Location} object is an example of a data structure that consists of several distinct information units. These include the integral and fractional parts of the longitude and latitude values, etc. \OC{\Tool\ handles objects that decompose into multiple information units by treating each unit as a separate object and applying the steps above to each of the units in turn.}
+%
+The notion of information units guards \Tool\ against ill-founded judgments, such as treating release of a single digit from the IMEI number as strong evidence for leakage.
 
 \subsection{Estimating Probabilities}\label{Se:estprob}
 
