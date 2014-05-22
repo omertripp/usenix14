@@ -1,18 +1,18 @@
 \section{The Bayesian Setting}\label{Se:bayes}
 
-Our starting point is to treat privacy enforcement as a classification problem, being the decision whether or not a given release point is legitimate. The instances are (runtime) release points. The labels are \emph{legitimate} and \emph{illegitimate}. Misclassification either yields a false alarm (mislabeling a legitimate point as \emph{illegitimate}) or a missed data leak (mislabeling an illegitimate point as \emph{legitimate}). 
+Our starting point is to treat privacy enforcement as a classification problem, being the decision whether or not a given release point is legitimate. \OC{The events, or instances, to be classified are (runtime) release points.}{} The labels are \emph{legitimate} and \emph{illegitimate}. Misclassification either yields a false alarm (\OCO{mistaking benign information release as a privacy threat}{mislabeling a legitimate point as \emph{illegitimate}}) or a missed data leak (\OCO{failing to intercept illegitimate information release}{mislabeling an illegitimate point as \emph{legitimate}}). 
 
-A popular classification method is based on Bayes' theorem (or rule). Given events $X$ and $Y$, Bayes' theorem states the following equality:
+\subsection{Bayes and Naive Bayes}
+
+\OC{Our general approach is to base the classification on the  \emph{evidence} arising at the release point.  Items of evidence may refer to qualitative facts, such as source/sink data-flow reachability, as well as quantitative measures, such as the degree of similarity between private values and values about to be released. These latter criteria are essential in going beyond the question of \emph{whether} private information is released to also reason about the \emph{amount} and \emph{form} of private information about to be released.}
+
+A popular classification method, representing this mode of reasoning, is based on Bayes' theorem (or rule). Given events $X$ and $Y$, Bayes' theorem states the following equality:
 \begin{equation}\label{Eq:bayes}
 	\Pr(Y | X) = \frac{\Pr(X | Y) \cdot \Pr(Y)}{\Pr(X)}
 \end{equation}
 where $\Pr(Y | X)$ is the conditional probability of $Y$ given $X$ (i.e., the probability for $Y$ to occur given that $X$ has occurred).
 %
-$X$ is referred to as the \emph{evidence}. 
-
-Given evidence $X$, the Bayesian classifier computes the conditional likelihood of each label (in our case, \emph{legitimate} and \emph{illegitimate}). The evidence may refer to qualitative criteria, such as source/sink data-flow reachability, but it can also refer to quantitative criteria, such as the degree of similarity between private values and values about to be released. These latter criteria are essential in going beyond the question of \emph{whether} private information is released to also reason about the \emph{amount} and \emph{form} of private information about to be released. 
-
-\subsection{Naive Bayes Algorithm}
+$X$ is referred to as the \emph{evidence}. Given evidence $X$, Bayesian classifiers compute the conditional likelihood of each label (in our case, \emph{legitimate} and \emph{illegitimate}). 
 
 We begin with the formal background by stating \equref{bayes} more rigorously. Assume that $Y$ is a discrete-valued random variable, and let $X=\left[ X_1,\ldots,X_n \right]$ be a vector of $n$ discrete or real-valued attributes $X_i$. Then
 \begin{equation}\label{Eq:fullbayes}
