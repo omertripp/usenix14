@@ -9,7 +9,8 @@ In this section, we describe the \Tool\ implementation, and present two sets of 
 } The experimental data we present indeed utilizes TaintDroid for tag propagation (as required for accurate resolution for relevant values).
 
 Beyond the TaintDroid instrumentation scheme, the \Tool\ scheme specifies additional behaviors for sources and sinks within the SDK. At source points, a hook is added to record the private value read by the source statement (which acts as a reference value). At sink points, a hook is installed to apply Bayesian reasoning regarding the legitimacy of the sink.
-Analogously to TaintDroid, \Tool\ performs privacy monitoring over APIs for file-system access and manipulation, inter-application and socket communication, reading the phone's state and location, and sending of text messages. \Tool\ also monitors the HTTP interface, camera, microphone, bluetooth and contacts. 
+
+Analogously to TaintDroid, \Tool\ performs privacy monitoring over APIs for file-system access and manipulation, inter-application and socket communication, reading the phone's state and location, and sending of text messages. \Tool\ also monitors the HTTP interface, camera, microphone, bluetooth and contacts. \OC{As explained in \secref{pseudo}, each of the privacy sources monitored by \Tool\ is mirrored by a tag/feature. The full list of features is as follows: \emph{IMEI}, \emph{IMSI}, \emph{AndroidID}, \emph{Location}, \emph{Microphone}, \emph{Bluetooth}, \emph{Camera}, \emph{Contacts}, \emph{FileSystem}.}
 
 The \Tool\ implementation is configurable, enabling the user to switch between distance metrics as well as enable/disable information-flow tracking for precise/heuristic determination of relevant values. (See \secref{points}.) In our experiments, we tried both the Levenshtein and the Hamming metrics, but found no observable differences, and so we report the results only once. Our reasoning for why the metrics are indistinguishable is because we apply both to equal-length strings (see \secref{similarstr}), and have made sure to apply the same metric both offline and online, and so both metrics achieve a very similar effect in the Bayesian setting.
 
@@ -97,10 +98,10 @@ Overall, TaintDroid detects 31 true leakages while also reporting 17 false posit
 \end{small}
 \end{table*}
 
-The results mark \Tool\ as visibly more accurate than TaintDroid with respective accuracy scores of 0.96 vs 0.69. Analysis of the per-benchmark findings reveals the following: First, the 2 false negatives of 
+The results mark \Tool\ as visibly more accurate than TaintDroid with respective accuracy scores of 0.96 vs 0.69, \OC{which confirms H1}. Analysis of the per-benchmark findings reveals the following: First, the 2 false negatives of 
 \Tool\ on {\tt ImplicitFlow1} are both due to proprietary (i.e., non-standard) data transformations, which are outside the current scope of \Tool. An illustrative fragment from the {\tt ImplicitFlow1} code is shown in \figref{dataTransform}. The {\tt obfuscateIMEI($\ldots$)} transformation maps IMEI digits to English letters, which is a non-standard behavior that is unlikely to arise in an authentic app.
 
-\Tool's false positive, shared with TaintDroid, is on release of sensitive data to the file system, albeit using the {\tt MODE\_PRIVATE} flag, which does not constitute a leakage problem in itself. This can be resolved by performing Bayesian reasoning not only over argument values, but also over properties of the sink API (in this case, the storage location mapped to a file handle). We intend to implement this enhancement. 
+The true positive reported by \Tool, in common with TaintDroid, is on release of sensitive data to the file system, albeit using the {\tt MODE\_PRIVATE} flag, which does not constitute a leakage problem in itself. This can be resolved by performing Bayesian reasoning not only over argument values, but also over properties of the sink API (in this case, the storage location mapped to a file handle). We intend to implement this enhancement. 
 
 \begin{figure}
 \begin{lstlisting}
