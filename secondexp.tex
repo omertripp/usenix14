@@ -1,0 +1,8 @@
+\section{Overhead Measurement: Methodology}\label{Se:methodology}
+
+\OC{To complete the description in \secref{practical}, we now detail the methodology governing our overhead measurements. 
+The behavior of the benchmark app is governed by two user-controlled values: (i) the length $\ell$ of the source/sink data-flow path (which is proportional to the number of loop iterations) and (ii) the number $m$ of values reachable from sink arguments.
+
+Based on our actual benchmarks, as well as data reported in past studies~\cite{TPFSW:PLDI09}, we defined the ranges $1 \leq \ell \leq 19$ and $1 \leq m \leq 13 = \Sigma_{n=0}^{2} 3^n$. We then ran the parametric app atop a ``hybrid'' configuration of \Tool\ that simultaneously propagates tags and treats all the values flowing into a sink as relevant.
+
+For each value of $\ell$, we executed the app 51 times, picking a value from the range $[0,2]$ for $n$ uniformly at random in each of the 51 runs. We then computed the average overhead over the runs, excluding the first (cold) run to remove unrelated initialization costs. The stacked columns in \figref{overhead} each correspond to a unique value of $\ell$.}
