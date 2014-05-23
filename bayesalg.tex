@@ -2,7 +2,7 @@
 
 In this section, we describe the complete \Tool\ algorithm. We then discuss enhancements of the core algorithm.
 
-\subsection{Pseudocode Description}
+\subsection{Pseudocode Description}\label{Se:pseudo}
 
 \algref{featureAlg} summarizes the main steps of \Tool. For simplicity, the description in \algref{featureAlg} assumes that source statements serve private data as their return value, though the \Tool\ implementation also supports other sources (e.g., callbacks like \texttt{onLocationChanged($\ldots$)}, where the private \texttt{Location} object is passed as a parameter). We also assume that each source maps to a unique privacy feature. Hence, when a source is invoked (i.e., the \texttt{OnSourceStatement} event fires), we obtain the unique tag corresponding to its respective feature via the 
 \texttt{GetFeature($\ldots$)} function. We then attach the tag to the return value $r$. Normal data flow obeys the standard rules of tag propagation, which 
