@@ -49,6 +49,42 @@ and {\tt ref}\ $f$. If this value is greater than some constant $c_f$ defined fo
 \caption{\label{Al:featureAlg}Outline of the core \Tool\ algorithm}
 \end{algorithm}
 
+\OC{We illustrate the \Tool\ algorithm with reference to \figref{prince}, which demonstrates a real leakage instance in {\tt com.g6677.android.princesshs}, a popular gaming application. In this example, two different private items flow into the sink statement: both the IMEI, read via {\tt getDeviceId()}, and the Android ID, read via {\tt getString(...)}.
+
+At sink statement {\tt URL.openConnection(...)}, the respective tags \emph{IMEI} and \emph{AndroidID} are extracted. Values are assigned to these features according to the description in \secref{algorithm}, where we utilize training data, as discussed later in \secref{impl}, for \equref{smoothEstimate} (for space, \emph{legitimate}/\emph{illegitimate} abbreviated as \emph{leg}/\emph{ilg} and \emph{AndroidID} as \emph{AndID}):
+\begin{align}
+	\Pr(\emph{IMEI} \geq 5 | \emph{leg}) & = & 0.071 \nonumber \\ 		% 3 / 42
+	\Pr(\emph{IMEI} \geq 5 | \emph{ilg}) & = & 0.809 \nonumber \\		% 34 / 42
+	\Pr(\emph{AndID} \geq 5 | \emph{leg}) & = & 0.047 \nonumber \\	% 2 / 42
+	\Pr(\emph{AndID} \geq 5 | \emph{ilg}) & = & 0.833 \nonumber		% 35 / 42
+\end{align}
+We then compute \equref{condind}, where the denominator is the same for both \emph{leg} and \emph{illeg}, and so it suffices to evaluate the nominator (denoted with $\tilde{\Pr}(...)$ rather than $\Pr(...)$):
+\begin{align}
+	 \tilde{\Pr}(\emph{leg} | \emph{IMEI} \geq 5,\emph{AndID} \geq 5) & = \nonumber \\
+	{\Pr}(\emph{leg}) \times \Pr(\emph{IMEI} \geq 5 | \emph{leg}) \times \Pr(\emph{AndID} \geq 5 | leg) & = \nonumber \\
+	0.66 \times 0.071 \times 0.047 &  = 0.002 \nonumber \\
+	\tilde{\Pr}(\emph{ilg} | \emph{IMEI} \geq 5,\emph{AndID} \geq 5) & = \nonumber \\
+	{\Pr}(\emph{ilg}) \times \Pr(\emph{IMEI} \geq 5 | \emph{ilg}) \times \Pr(\emph{AndID} \geq 5 | ilg) & = \nonumber \\
+	0.33  \times0.809 \times 0.833 & = 0.222 \nonumber
+\end{align}
+Our estimates of 0.66 for $\Pr(\emph{leg})$ and 0.33 for $\Pr(\emph{ilg})$ are again based on training data as explained in \secref{impl}.
+The obtained conditional measure of 0.222 for \emph{ilg} is (far) greater than 0.002 for \emph{leg}, and so \Tool\ resolves the release instance in \figref{prince} as a privacy threat, which is indeed the correct judgment.} 
+
+\begin{figure}
+\begin{lstlisting}
+$\fbox{source : private value}$
+    TelephonyManager.getDeviceId() : $\textbf{000000000000000}$
+    Settings$\$$Secure.getString(...) : $\textbf{cdf15124ea4c7ad5}$
+   
+$\fbox{sink : arguments}$
+  URL.openConnection(...) : app_id=2aec0559c930 ... &
+  android_id=$\textbf{cdf15124ea4c7ad5}$ \& udid= ... & 
+  serial_id= ... & ... &
+  publisher_user_id=$\textbf{000000000000000}$
+\end{lstlisting}
+\caption{\label{Fi:prince}True leakage detected by \Tool\ in {\tt com.g6677.android.princesshs}}
+\end{figure}
+
 \subsection{Enhancements}\label{Se:points}
 
 We conclude our description of \Tool\ by highlighting two extensions of the core algorithm.

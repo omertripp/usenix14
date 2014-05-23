@@ -99,8 +99,8 @@ Given string metric $d(x,y)$ and pair $(u,v)$ of reference value $u$ and relevan
 \KwData{Distance metric $d$}
 \BlankLine
 \Begin{
-	$x \longleftarrow |u| < |v|\ ?\ u\ \colon\ v$\;
-	$y \longleftarrow |u| \geq |v|\ ?\ u\ \colon\ v$\;
+	$x \longleftarrow |u| < |v|\ ?\ u\ \colon\ v$ \tcp*[h]{min}\;
+	$y \longleftarrow |u| \geq |v|\ ?\ u\ \colon\ v$ \tcp*[h]{max}\;
 	$r \longleftarrow y$\;
 	\For{$i = 0$ {\bf to} $|y|-|x|$}{
 		$y' \longleftarrow y[i,i+|x|-1]$\;
@@ -134,13 +134,13 @@ $\Pr(\emph{legitimate})$ can be approximated straightforwardly based on availabl
 estimated conditional probability $\theta_{ijk}$ according to the following equation: 
 \begin{equation}\label{Eq:naiveEstimate}
 	\begin{array}{lcr}
-		\theta_{ijk} = \hat{\Pr}(X_i = x_{ij} | Y=y_k) & = & \frac{\# D \{ X_i = x_{ij} \wedge Y = y_k \}}{\# D \{ Y = y_k \}} \\ 
+		\theta_{ijk} = \widehat{\Pr}(X_i = x_{ij} | Y=y_k) & = & \frac{\# D \{ X_i = x_{ij} \wedge Y = y_k \}}{\# D \{ Y = y_k \}} \\ 
 	\end{array}
 \end{equation}
 The danger, however, is that this equation would produce estimates of zero if the data happens not to contain any training examples satisfying the condition in the numerator. To fix this, we modify \equref{naiveEstimate} as follows:
 \begin{equation}\label{Eq:smoothEstimate}
 	\begin{array}{lcr}
-		\theta_{ijk} = \hat{\Pr}(X_i = x_{ij} | Y=y_k) & = & \frac{\# D \{ X_i = x_{ij} \wedge Y = y_k \} + l}{\# D \{ Y = y_k \} + l \cdot J} \\ 
+		\theta_{ijk} = \widehat{\Pr}(X_i = x_{ij} | Y=y_k) & = & \frac{\# D \{ X_i = x_{ij} \wedge Y = y_k \} + l}{\# D \{ Y = y_k \} + l \cdot J} \\ 
 	\end{array}
 \end{equation}
 where $l$ is a factor that ``smoothens'' the estimate by adding in a number of ``hallucinated'' examples that are assumed to be spread evenly across the possible values of $X_i$. In \secref{impl}, we provide concrete detail on the data sets and parameter values we used to for our estimates.
