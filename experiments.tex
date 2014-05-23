@@ -16,10 +16,10 @@ The \Tool\ implementation is configurable, enabling the user to switch between d
 
 \paragraph{Training} To instantiate \Tool\ with the required estimates, as explained in \secref{estprob}, we applied the following methodology:
 %
-First, to estimate $\Pr(\emph{legitimate})$, we relied on (i) an extensive study by Hornyack et al. spanning 1,100 top-popular free Android apps~\cite{HHJSW:CCS11}, as well as (ii) a similarly comprehensive study by Enck et al.~\cite{EOMC:SEC11}, which also spans a set of 1,100 free apps. According to the data presented in these studies, approximately one out of three release points is illegitimate, and thus $\hat{\Pr}(\emph{legitimate})=0.66$ and complementarily 
-$\hat{\Pr}(\emph{illegitimate}) = 1-0.66 \approx 0.33$.
+First, to estimate $\Pr(\emph{legitimate})$, we relied on (i) an extensive study by Hornyack et al. spanning 1,100 top-popular free Android apps~\cite{HHJSW:CCS11}, as well as (ii) a similarly comprehensive study by Enck et al.~\cite{EOMC:SEC11}, which also spans a set of 1,100 free apps. According to the data presented in these studies, approximately one out of three release points is illegitimate, and thus $\widehat{\Pr}(\emph{legitimate})=0.66$ and complementarily 
+$\widehat{\Pr}(\emph{illegitimate}) = 1-0.66 \approx 0.33$.
 
-For the conditional probabilities $\hat{\Pr}(X_i = x_{ij} | Y=y_k)$,  we queried Google Play for the 100 most popular apps (across all domains) in the geography of one of the authors. We then selected at random 35 of these apps, and analyzed their information-release behavior using debug breakpoints 
+For the conditional probabilities $\widehat{\Pr}(X_i = x_{ij} | Y=y_k)$,  we queried Google Play for the 100 most popular apps (across all domains) in the geography of one of the authors. We then selected at random 35 of these apps, and analyzed their information-release behavior using debug breakpoints 
 (which we inserted via the {\tt adb} tool that is distributed as part of the Android SDK). 
 
 Illegitimate leaks that we detected offline mainly involved (i) location information and (ii) device and user identifiers, which is consistent with the findings reported by past studies~\cite{HHJSW:CCS11,EOMC:SEC11}. We confirmed that illegitimate leaks are largely correlated with high similarity between private data and sink arguments, and so we fixed six distance levels for each private item: $[0,4]$ and ``$\geq 5$''. (See \secref{featext}.) Finally, to avoid from zero estimates for conditional probabilities while also minimizing data perturbation, we set the ``smoothening'' factor $l$ in \equref{smoothEstimate} at 1, where the illegitimate flows we detected were in the order of several dozens per private item. 
