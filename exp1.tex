@@ -1,0 +1,100 @@
+\subsection{H1: Accuracy \JCO{}{of \Tool}}
+\label{Se:overhead}
+\JC{To assess the accuracy of \Tool, we compared it to that of TaintDroid --- a state-of-the-art information-flow tracking tool for privacy enforcement. Our experimental settings and results are described below.
+
+\paragraph{Subjects} We applied both TaintDroid and \Tool\ to DroidBench --- an independent and publicly available collection of benchmarks serving as testing ground for both static and dynamic privacy enforcement algorithms.} DroidBench models a large set of realistic challenges in leakage detection, including precise tracking of sensitive data through containers, handling of callbacks, field and object sensitivity, lifecycle modeling, inter-app communication, reflection and implicit flows.
+
+\JC{
+The DroidBench suite consists of 50 cases. We excluded from our experiment (i) 8 benchmarks that crash at startup, as well as (ii) 5 benchmarks that leak data via callbacks that we did not manage to trigger (e.g., {\tt onLowMemory()}),
+as both TaintDroid and \Tool\ were naturally unable to detect leakages in these two cases.
+%{, for a total of 37 benchmarks. For both of these categories, both TaintDroid and \Tool\ were naturally unable to detect leakages.}
+The complete list of benchmarks that we used can be found in \tableref{accuracyDBenchDetails} of \appendixref{completeRes}.
+
+\paragraph{Methodology}
+For each benchmark, we measured the number of true-positive (TP), false-positive (FP) and false-negative (FN) results, and then calculated the \emph{precision} and \emph{recall} of each tool using the formulas below:
+$$Precision = \frac{TP}{TP+FP}$$
+$$Recall = \frac{TP}{TP+FN}$$
+
+High precision implies that a technique returns few irrelevant results, whereas  high recall implies that it misses only few relevant ones. Since ideal techniques have both high recall and high precision, the F-measure is commonly used to combine
+both precision and recall into a single measure. The F-measure is defined as the harmonic mean of precision and recall, and is
+calculated as follows:
+$$F\texttt{-}Measure = 2*\frac{Precision * Recall}{Precision + Recall}$$
+
+The value of F-measure is high only when both precision and recall are high. We thus use the F-measure to evaluate the
+accuracy of each technique.}
+
+\begin{table*}
+%\setlength{\tabcolsep}{0.2em}
+\begin{small}
+\begin{center}
+%\resizebox{\textwidth}{!}{
+\begin{tabular}{|c||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+ \hline
+ & & & & & & \\[-0.08in]
+ & TPs & FPs & FNs & Precision & Recall & F-measure \\[0.06in]
+\hline
+ & & & & & & \\[-0.08in]
+ TaintDroid & 31  &  17  &  0  &  0.66  &  1.00  &  0.66 (0.78) \\[0.06in]
+\hline
+ & & & & & & \\[-0.08in]
+ \Tool & 29  &   1  &  2  &  0.98  &  0.97  &  0.96 (0.95) \\[0.06in]
+\hline
+\end{tabular}
+%}% resizebox
+ \end{center}
+ \caption{\label{Ta:accuracyDBench}Accuracy of \Tool\ and TaintDroid on DroidBench}
+\end{small}
+\end{table*}
+
+\JC{\paragraph{Results}
+The results obtained for both TaintDroid and \Tool\ on version 1.1 of DroidBench are summarized in \tableref{accuracyDBench} and presented in detail in \tableref{accuracyDBenchDetails}. The findings reported by \Tool\ are also publicly available.\footnote{
+	See archive file droidbench.zip available online at \href{https://www.dropbox.com/sh/ggrcvqsbkiubmlb/faSUXmr9xK}{https://www.dropbox.com/sh/ggrcvqsbkiubmlb/faSUXmr9xK}.
+}
+
+Overall, TaintDroid detects 31 true leakages while also reporting 17 false positives, whereas our approach suffers from 2 false negatives, discovering 29 of the true leakages while flagging only 1 false positive.
+We averaged the F-measure calculation across all benchmarks (0.66 for TaintDroid vs. 0.96 for \Tool). 
+We also provide the ``global'' score computed by considering all TP, FP and FN results together in parentheses  (0.78 vs 0.95).
+
+%We summarize the results as (i) the average across all app scores, shown outside the parentheses (0.96 for \Tool\ vs 0.69 for %TaintDroid), as well as (ii) the global accuracy score, computed as TPs / (TPs + FPs + Fns) (0.91 vs 0.65).
+
+The results mark \Tool\ as visibly more accurate than TaintDroid. To further confirm this observation, we performed a 
+Welch's T-Test --- an adaptation of Student's T-Test intended to test the null hypothesis that the two population means (in our case, average F-measures) are equal. Welch's variant of the T-Test is used when two samples are having possibly unequal variances~\cite{Welch:1947}.
+The result of applying the test rejects the null hypothesis and demonstrates that \Tool\ performs significantly better than TaintDroid (p-value $\ll$ 0.05),
+%The results mark \Tool\ as visibly more accurate than TaintDroid with respective accuracy scores of 0.96 vs 0.69, 
+which \emph{confirms H1}.}
+
+\paragraph{Discussion}
+Analysis of the per-benchmark findings reveals the following: 
+First, the 2 false negatives of
+\Tool\ on {\tt ImplicitFlow1} are both due to proprietary (i.e., non-standard) data transformations, which are outside the current scope of \Tool. An illustrative fragment from the {\tt ImplicitFlow1} code is shown in \figref{dataTransform}. The {\tt obfuscateIMEI($\ldots$)} transformation maps IMEI digits to English letters, which is a non-standard behavior that is unlikely to arise in an authentic app.
+
+The true positive reported by \Tool, in common with TaintDroid, is on release of sensitive data to the file system, albeit using the {\tt MODE\_PRIVATE} flag, which does not constitute a leakage problem in itself. This can be resolved by performing Bayesian reasoning not only over argument values, but also over properties of the sink API (in this case, the storage location mapped to a file handle). We intend to implement this enhancement.
+
+\begin{figure}
+\begin{lstlisting}
+TelephonyManager tm =
+    getSystemService(TELEPHONY_SERVICE);
+String imei = tm.getDeviceId(); //source
+String obfuscatedIMEI = obfuscateIMEI(imei); ...;
+Log.i(imei); // sink
+
+private String obfuscateIMEI(String imei) {
+  String result = "";
+  for (char c : imei.toCharArray()) {
+    switch(c) {
+      case '0': result += 'a'; break;
+      case '1': result += 'b'; break;
+      case '2': result += 'c'; break;
+      ...; } }
+\end{lstlisting}
+\caption{\label{Fi:dataTransform} Fragment from the DroidBench {\tt ImplicitFlow1} benchmark, which applies a proprietary transformation to private data}
+\end{figure}
+
+
+Beyond the false alarm in common with \Tool, TaintDroid has multiple other sources of imprecision. The main reasons for its false positives are
+\begin{compactitem}
+	\item coarse modeling of containers, mapping their entire contents to a single taint bit, which accounts e.g. for the false alarms on {\tt ArrayAccess\{1,2\}} and {\tt HashMapAccess1};
+	\item field and object insensitivity, resulting in false alarms on {\tt FieldSensitivity\{2,4\}} and {\tt ObjectSensitivity\{1,2\}}; and more fundamentally,
+	\item ignoring of data values, which causes TaintDroid to issue false warnings on {\tt LocationLeak\{1,2\}} even when location reads fail, yielding a {\tt Location} object without any meaningful information.
+\end{compactitem}
+The fundamental reason for these imprecisions is to constrain the overhead of TaintDroid, such that it can meet the performance demands of online privacy enforcement. \Tool\ is able to accommodate such optimizations while still ensuring high accuracy. 

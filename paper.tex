@@ -13,10 +13,10 @@
 % the .sty file from the LaTeX source template, so that people can
 % more easily include the .sty file into an existing document.  Also
 % changed to more closely follow the style guidelines as represented
-% by the Word sample file. 
+% by the Word sample file.
 
 % Note that since 2010, USENIX does not require endnotes. If you want
-% foot of page notes, don't include the endnotes package in the 
+% foot of page notes, don't include the endnotes package in the
 % usepackage command, below.
 
 % This version uses the latex2e styles, not the very ancient 2.09 stuff.
@@ -44,6 +44,7 @@
 \usepackage{enumitem}
 \usepackage{algorithm2e}
 \usepackage{etex}
+\usepackage{array}
 
 \setdescription{leftmargin=2pt}
 \setdescription{parsep=1pt}
@@ -56,8 +57,12 @@
 \newcommand\OC[1]{{\color{blue} #1}}
 \newcommand\JC[1]{{\color{purple} #1}}
 \newcommand\OCO[2]{{\color{blue} #1}{\color{red} [[ #2 ]]}}
-\newcommand\JCO[2]{{\color{blue} #1}{\color{purple} [[ #2 ]]}}
+\newcommand\JCO[2]{{\color{purple} #1}{\color{red} [[ #2 ]]}}
 %\newcommand\added[1]{#1}
+
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{M}[1]{>{\centering\arraybackslash\hspace{0pt}}m{#1}}
 
 \input{macros}
 \input{specificmacros}
@@ -76,7 +81,7 @@ morekeywords={def,Int,call,method,var,assert,share,unshare,acquire,release,fork,
 basicstyle=\sffamily\small,
 moredelim=[is][\itshape]{@}{@},
 stepnumber=1,
-numbersep=2pt} 
+numbersep=2pt}
 
 \begin{document}
 
@@ -86,20 +91,20 @@ numbersep=2pt}
 %\preprintfooter{short description of paper}   % 'preprint' option specified.
 
 \title{A Bayesian Approach to Privacy Enforcement in Smartphones}
-\author{
-	{\rm author names omitted for double-blind review}\\
-}
 %\author{
-%{\rm Omer Tripp}\\
-%IBM Research
-%\and
-%{\rm Julia Rubin}\\
-%IBM Research
-%% copy the following lines to add more authors
-%% \and
-%% {\rm Name}\\
-%%Name Institution
-%} % end author
+%	{\rm author names omitted for double-blind review}\\
+%}
+\author{
+{\rm Omer Tripp}\\
+IBM Research, USA
+\and
+{\rm Julia Rubin}\\
+IBM Research, Israel
+% copy the following lines to add more authors
+% \and
+% {\rm Name}\\
+%Name Institution
+} % end author
 
 \maketitle
 
@@ -130,12 +135,12 @@ numbersep=2pt}
 \newpage
 
 \appendix
-
+\input{secondexp}
 \input{results}
 
-\input{secondexp}
 
-\end{document} 
+
+\end{document}
 
 
 

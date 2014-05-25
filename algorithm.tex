@@ -22,7 +22,7 @@ Bayesian classification then reduces to comparing between $v_{leg}$ and $v_{ille
 %		& \text{\color{white} {~~~~~~}}  \text{$x$ is ``relevant'' value flowing into sink} \} \\
 %\end{array}
 %$$
-%In the above, the function $d(X,Y)$ is a distance metric, \emph{F} denotes a feature, F denotes its respective private item, and $\lsyn \text{F} \rsyn$ 
+%In the above, the function $d(X,Y)$ is a distance metric, \emph{F} denotes a feature, F denotes its respective private item, and $\lsyn \text{F} \rsyn$
 %($\lsyn \emph{F} \rsyn$) denote the value of F (\emph{F}).
 
 \subsection{Feature Extraction}\label{Se:featext}
@@ -30,13 +30,13 @@ Bayesian classification then reduces to comparing between $v_{leg}$ and $v_{ille
 The first challenge that arises is how to define the features (denoted with italicized font: \emph{F}) corresponding to the private values (denoted with regular font: F). This requires simultaneous consideration of both the actual private value and the ``relevant'' values arising at the sink statement (or release point).
 We apply the following computation:
 \begin{compactenum}
-	\item Reference value: We refer to the actual private value as the \emph{reference value}, denoting the value of private item F as $\lsyn \text{F} \rsyn$. For the example in \figrefs{quantitative}{imsiAnalysis}, the reference value, $\lsyn \text{IMSI} \rsyn$, of the \emph{IMSI} feature would be the 
-	device's IMSI 
+	\item Reference value: We refer to the actual private value as the \emph{reference value}, denoting the value of private item F as $\lsyn \text{F} \rsyn$. For the example in \figrefs{quantitative}{imsiAnalysis}, the reference value, $\lsyn \text{IMSI} \rsyn$, of the \emph{IMSI} feature would be the
+	device's IMSI
 	number: $\lsyn \text{IMSI} \rsyn$ = ``404685505601234''.
-	\item Relevant value: We refer to value $v$ about to be released by the sink statement as \emph{relevant} with respect to feature \emph{F} if there is data-flow connectivity between a source statement reading the value $\lsyn \text{F} \rsyn$ of F and $v$. 
+	\item Relevant value: We refer to value $v$ about to be released by the sink statement as \emph{relevant} with respect to feature \emph{F} if there is data-flow connectivity between a source statement reading the value $\lsyn \text{F} \rsyn$ of F and $v$.
 	Relevant values can thus be computed via information-flow tracking by propagating a unique tag (or label) per each private value, as tools like TaintDroid already do. Note that for a given feature \emph{F}, multiple different relevant values may arise
 	at a given sink statement (if the private item F flows into more than one sink argument).
-	\item Feature value: Finally, given the reference value $\lsyn \text{F} \rsyn$ and a set $\{ v_1,\ldots,v_k \}$ of relevant values for feature \emph{F}, the value we assign to \emph{F} (roughly) reflects the highest degree of pairwise similarity (i.e., minimal distance) between 
+	\item Feature value: Finally, given the reference value $\lsyn \text{F} \rsyn$ and a set $\{ v_1,\ldots,v_k \}$ of relevant values for feature \emph{F}, the value we assign to \emph{F} (roughly) reflects the highest degree of pairwise similarity (i.e., minimal distance) between
 	$\lsyn \text{F} \rsyn$ and the values $v_i$. Formally, we assume a distance metric $d$. Given $d$, we define:
 	$$
 		\lsyn \emph{F} \rsyn \equiv \min_{1 \leq i \leq k} \{ d(\lsyn \text{F} \rsyn,v_i) \}
@@ -44,13 +44,13 @@ We apply the following computation:
 	We leave the distance metric $d(\ldots)$ unspecified for now, and return to its instantiation in \secref{similarstr}.
 \end{compactenum}
 
-According to our description above, feature values are unbounded in principle, as they represent the distance between the reference value and any data-dependent sink values. In practice, however, assuming (i) the distance metric $d(\ldots)$ satisfies $d(x,y) \leq \max \{ |x|,|y| \}$, (ii) $\exists c \in \mathbb{N}.\ | \lsyn \text{F} \rsyn | \leq c$ (as with the IMEI, IMSI, location, etc), and (iii) $\lsyn \text{F} \rsyn$ is not compared with values larger than it, we can bound $\lsyn \emph{F} \rsyn$ by $c$. In general, any feature can be made finite, with (at most) $n+1$ possible values, by introducing a privileged ``$\geq n$'' value, which denotes that the distance between the reference and relevant values is at least $n$.
+According to our description above, feature values are unbounded in principle, as they represent the distance between the reference value and any data-dependent sink values. In practice, however, assuming (i) the distance metric $d(\ldots)$ satisfies $d(x,y) \leq \max \{ |x|,|y| \}$, (ii) $\exists c \in \mathbb{N}.\ | \lsyn \text{F} \rsyn | \leq c$ (as with the IMEI, IMSI, location, etc.), and (iii) $\lsyn \text{F} \rsyn$ is not compared with values larger than it, we can bound $\lsyn \emph{F} \rsyn$ by $c$. In general, any feature can be made finite, with (at most) $n+1$ possible values, by introducing a privileged ``$\geq n$'' value, which denotes that the distance between the reference and relevant values is at least $n$.
 
 \subsection{Measuring Distance between Values}\label{Se:similarstr}
 
-To compute a quantitative measure of similarity between data values, we exploit the fact that private data often manifests as strings of ASCII characters~\cite{EGCCJMS:OSDI10,HHJSW:CCS11,YYZGNW:CCS13}. These include e.g. device identifiers (like the IMEI and IMSI numbers), GPS coordinates, inter-application communication (IPC) parameters, etc. This lets us quantify distance between values in terms of string metrics. 
+To compute a quantitative measure of similarity between data values, we exploit the fact that private data often manifests as strings of ASCII characters~\cite{EGCCJMS:OSDI10,HHJSW:CCS11,YYZGNW:CCS13}. These include e.g. device identifiers (like the IMEI and IMSI numbers), GPS coordinates, inter-application communication (IPC) parameters, etc. This lets us quantify distance between values in terms of string metrics.
 
-Many string metrics have been proposed to date~\cite{PS:BIS07}. Two simple and popular metrics, which we have experimented with and satisfy the requirement that 
+Many string metrics have been proposed to date~\cite{PS:BIS07}. Two simple and popular metrics, which we have experimented with and satisfy the requirement that
 $d(x,y) \leq \max \{ |x|,|y| \}$, are the following:
 
 \paragraph{Hamming Distance} This metric assumes that the strings are of equal length. The Hamming distance between two strings is equal to the number of positions at which the corresponding symbols are different (as indicated by the indicator function $\delta_{c_1 \neq c_2}(\ldots)$):
@@ -61,13 +61,13 @@ $$
 \end{small}
 In another view, Hamming distance measures the number of substitutions required to change one string into the other.
 
-\paragraph{Levenshtein Distance} The Levenshtein string metric computes the distance between strings $a$ and $b$ as ${\sf lev}_{a,b}(|a|,|b|)$ 
-(abbreviated as ${\sf lev}(|a|,|b|)$), where 
+\paragraph{Levenshtein Distance} The Levenshtein string metric computes the distance between strings $a$ and $b$ as ${\sf lev}_{a,b}(|a|,|b|)$
+(abbreviated as ${\sf lev}(|a|,|b|)$), where
 \begin{small}
-$$ 
-{\sf lev}(i,j) = \left\{ 
+$$
+{\sf lev}(i,j) = \left\{
   \begin{array}{l l}
-   \max(i,j)				& \text{\emph{if} $\min(i,j)=0$} \\ 
+   \max(i,j)				& \text{\emph{if} $\min(i,j)=0$} \\
    \min \left( {\begin{array}{l}
    		{\sf lev}(i-1,j) + 1 \\
 		{\sf lev}(i,j-1) + 1 \\
@@ -80,11 +80,11 @@ Informally, ${\sf lev}(|a|,|b|)$ is the minimum number of single-character edits
 
 Given string metric $d(x,y)$ and pair $(u,v)$ of reference value $u$ and relevant value $v$, \Tool\ computes their distance according to the following steps:
 \begin{compactenum}
-	\item \Tool\ ensures that both $u$ and $v$ are {\tt String} objects by either (i) invoking {\tt toString()} on reference types or (ii) converting primitive types into {\tt String}s 
-	(via {\tt String.valueOf($\ldots$)}), if 
+	\item \Tool\ ensures that both $u$ and $v$ are {\tt String} objects by either (i) invoking {\tt toString()} on reference types or (ii) converting primitive types into {\tt String}s
+	(via {\tt String.valueOf($\ldots$)}), if
 	the argument is not already of type {\tt String}.
 	\item To meet the conservative requirement that $|x|=|y|$ (i.e., $x$ and $y$ are of equal length), \Tool\ applies \algref{normalized}. This algorithm induces a sliding window over the longer of the two strings, whose width is equal to the length of the shorter string. The shorter string is then compared to contiguous segments of the longer string that have the same length. The output is the minimum across all comparisons.
-\end{compactenum} 
+\end{compactenum}
 
 
 \begin{algorithm}[t]
@@ -114,7 +114,7 @@ Given string metric $d(x,y)$ and pair $(u,v)$ of reference value $u$ and relevan
 \caption{\label{Al:normalized}The \Tool\ distance measurement algorithm}
 \end{algorithm}
 
-To ensure that comparisons are still meaningful under length adjustment, we decompose private values into indivisible \emph{information units}. These are components of the private value that cannot be broken further, and so comparing them with a shorter value mandates that the shorter value be padded. In our specification, the phone, IMEI and IMSI numbers consist of only one unit of information. 
+To ensure that comparisons are still meaningful under length adjustment, we decompose private values into indivisible \emph{information units}. These are components of the private value that cannot be broken further, and so comparing them with a shorter value mandates that the shorter value be padded. In our specification, the phone, IMEI and IMSI numbers consist of only one unit of information.
 %
 The {\tt Location} object is an example of a data structure that consists of several distinct information units. These include the integral and fractional parts of the longitude and latitude values, etc. \OC{\Tool\ handles objects that decompose into multiple information units by treating each unit as a separate object and applying the steps above to each of the units in turn.}
 %
@@ -124,26 +124,26 @@ The notion of information units guards \Tool\ against ill-founded judgments, suc
 
 The remaining challenge, having clarified what the features are and how their values are computed, is to estimate the probabilities appearing in \equref{condind}:
 \begin{compactitem}
-	\item We need to estimate the probability of the \emph{legitimate} event, $\Pr(\emph{legitimate})$, where \emph{illegitimate} is the complementary event and thus 
+	\item We need to estimate the probability of the \emph{legitimate} event, $\Pr(\emph{legitimate})$, where \emph{illegitimate} is the complementary event and thus
 	$\Pr(\emph{illegitimate}) = 1 - \Pr(\emph{legitimate})$.
 	\item We need to estimate the conditional probabilities $\Pr(\emph{F} = u | \emph{legitimate})$ and $\Pr(\emph{F} = u | \emph{illegitimate})$ for all features $F$
 	and respective values $u$.
 \end{compactitem}
 
-$\Pr(\emph{legitimate})$ can be approximated straightforwardly based on available statistics on the frequency of data leaks in the wild. For the conditional probabilities, assuming feature $X_i$ is discrete valued with $j$ distinct values (per the discussion in \secref{featext} above), we would naively compute the 
-estimated conditional probability $\theta_{ijk}$ according to the following equation: 
+$\Pr(\emph{legitimate})$ can be approximated straightforwardly based on available statistics on the frequency of data leaks in the wild. For the conditional probabilities, assuming feature $X_i$ is discrete valued with $j$ distinct values (per the discussion in \secref{featext} above), we would naively compute the
+estimated conditional probability $\theta_{ijk}$ according to the following equation:
 \begin{equation}\label{Eq:naiveEstimate}
 	\begin{array}{lcr}
-		\theta_{ijk} = \widehat{\Pr}(X_i = x_{ij} | Y=y_k) & = & \frac{\# D \{ X_i = x_{ij} \wedge Y = y_k \}}{\# D \{ Y = y_k \}} \\ 
+		\theta_{ijk} = \widehat{\Pr}(X_i = x_{ij} | Y=y_k) & = & \frac{\# D \{ X_i = x_{ij} \wedge Y = y_k \}}{\# D \{ Y = y_k \}} \\
 	\end{array}
 \end{equation}
 The danger, however, is that this equation would produce estimates of zero if the data happens not to contain any training examples satisfying the condition in the numerator. To fix this, we modify \equref{naiveEstimate} as follows:
 \begin{equation}\label{Eq:smoothEstimate}
 	\begin{array}{lcr}
-		\theta_{ijk} = \widehat{\Pr}(X_i = x_{ij} | Y=y_k) & = & \frac{\# D \{ X_i = x_{ij} \wedge Y = y_k \} + l}{\# D \{ Y = y_k \} + l \cdot J} \\ 
+		\theta_{ijk} = \widehat{\Pr}(X_i = x_{ij} | Y=y_k) & = & \frac{\# D \{ X_i = x_{ij} \wedge Y = y_k \} + l}{\# D \{ Y = y_k \} + l \cdot J} \\
 	\end{array}
 \end{equation}
-where $l$ is a factor that ``smoothens'' the estimate by adding in a number of ``hallucinated'' examples that are assumed to be spread evenly across the possible values of $X_i$. In \secref{impl}, we provide concrete detail on the data sets and parameter values we used to for our estimates.
+where $l$ is a factor that ``smoothens'' the estimate by adding in a number of ``hallucinated'' examples that are assumed to be spread evenly across the possible values of $X_i$. In \secref{impl}, we provide concrete detail on the data sets and parameter values we used for our estimates.
 
 
 %\algref{corealg} provides a pseudocode description of \Tool. The algorithm logs source calls, along with the read data values, into a set ${\bf H}$. When a sink event is fired, i.e. when a sink is about to be invoked, \Tool\ traverses all pairs $(d,d')$ of data values, such that $d$ is read by a source and $d'$ is about to flow into the sink call, and checks whether the values are similar beyond a parametric threshold ${\bf T}$. If so, then an alarm is triggered. We explain how data values are derived from source and sink arguments and how similarity judgments are executed in the following.
@@ -165,7 +165,7 @@ where $l$ is a factor that ``smoothens'' the estimate by adding in a number of `
 %\Begin{
 %	\While{\true}{
 %		\SrcEvent\ {\tt r := s(p$_1$,$\ldots$,p$_n$) $\colon$}\; \Indp
-%			$D = \{ d_1,\ldots,d_k \}$ $\longleftarrow$ \GetData({\tt r})\; 
+%			$D = \{ d_1,\ldots,d_k \}$ $\longleftarrow$ \GetData({\tt r})\;
 %			{\bf H} $\longleftarrow$ {\bf H} $\cup$ $\{ ($ {\tt s} $\rightarrow$ $\{ d_1,\ldots,d_n \}$ $) \}$\; \Indm
 %		\SnkEvent\ {\tt r' := s'(p'$_1$,$\ldots$,p'$_m$) $\colon$}\; \Indp
 %			$D' = \{ d'_1,\ldots,d'_t \}$ $\longleftarrow$ \GetData({\tt p'$_1$},$\ldots$,{\tt p'$_m$})\;
@@ -183,7 +183,7 @@ where $l$ is a factor that ``smoothens'' the estimate by adding in a number of `
 %
 %\subsection{The {\tt GetData} Algorithm}\label{Se:getdata}
 %
-%The quality of value-based leakage analysis hinges on the specification of which data values arising at source and sink points are relevant. These values are then subjected to similarity judgments, and so inadequate choice of values could degrade both the precision and the performance of the analysis. As an example, if a source call returns a compound object, or a sink call accepts a compound object as argument, then simply reducing all the primitive values reachable from the root object into a long string is unlikely to work well. This could lead to 
+%The quality of value-based leakage analysis hinges on the specification of which data values arising at source and sink points are relevant. These values are then subjected to similarity judgments, and so inadequate choice of values could degrade both the precision and the performance of the analysis. As an example, if a source call returns a compound object, or a sink call accepts a compound object as argument, then simply reducing all the primitive values reachable from the root object into a long string is unlikely to work well. This could lead to
 %\begin{compactitem}
 %	\item false positives, if irrelevant portions of the strings are sufficiently similar to obscure differences between relevant portions of the strings;
 %	\item false negatives, if irrelevant portions of the strings are sufficiently different to obscure similarities between relevant portions of the strings; and
@@ -203,16 +203,16 @@ where $l$ is a factor that ``smoothens'' the estimate by adding in a number of `
 %\caption{\label{Fi:dataSelection} Fragment from DroidBench {\tt IntentSink2} benchmark: Data leakage through an internal field of an {\tt Intent} object}
 %\end{figure}
 %
-%Another aspect of {\tt GetData} is the runtime choice of whether a concrete value specified as relevant indeed carries secret information. To continue from the previous example, certain data values stored as {\tt Intent} attributes are benign. Early pruning of such values, already within {\tt GetData}, is beneficial for two reasons: First, the threat of false reports due to these values is lifted, and second, the performance of the external analysis loop is improved. In our current \Tool\ prototype, we pass ``secrecy'' judgments over data values by chaining two simple heuristics. First, we apply structural filtering to values. If a value is short ($\leq 4$ characters) and contains only alphanumeric characters, then that value is deemed irrelevant. For the surviving values, we optionally check if these values appear frequently in a corpus of online texts. Currently we conduct the search programmatically via the Google web service. More secure alternatives are of course available. 
+%Another aspect of {\tt GetData} is the runtime choice of whether a concrete value specified as relevant indeed carries secret information. To continue from the previous example, certain data values stored as {\tt Intent} attributes are benign. Early pruning of such values, already within {\tt GetData}, is beneficial for two reasons: First, the threat of false reports due to these values is lifted, and second, the performance of the external analysis loop is improved. In our current \Tool\ prototype, we pass ``secrecy'' judgments over data values by chaining two simple heuristics. First, we apply structural filtering to values. If a value is short ($\leq 4$ characters) and contains only alphanumeric characters, then that value is deemed irrelevant. For the surviving values, we optionally check if these values appear frequently in a corpus of online texts. Currently we conduct the search programmatically via the Google web service. More secure alternatives are of course available.
 %
 %\subsection{The {\tt ComputeDistance} Algorithm}\label{Se:computedist}
 %
-%To compute a quantitative measure of similarity between data values, we exploit the fact that most of these values are strings of ASCII characters. These include e.g. device identifiers (like the IMEI and IMSI numbers), GPS coordinates, {\tt Intent} parameters, etc. This assumption leads to a notion of similarity in terms of string distance metrics, where a natural and well-known string metric is \emph{Levenshtein distance} (aka \emph{edit distance}). Mathematically, the Levenshtein distance between strings $a$ and $b$ is given by ${\sf lev}_{a,b}(|a|,|b|)$, where 
+%To compute a quantitative measure of similarity between data values, we exploit the fact that most of these values are strings of ASCII characters. These include e.g. device identifiers (like the IMEI and IMSI numbers), GPS coordinates, {\tt Intent} parameters, etc. This assumption leads to a notion of similarity in terms of string distance metrics, where a natural and well-known string metric is \emph{Levenshtein distance} (aka \emph{edit distance}). Mathematically, the Levenshtein distance between strings $a$ and $b$ is given by ${\sf lev}_{a,b}(|a|,|b|)$, where
 %\begin{small}
-%$$ 
-%{\sf lev}_{a,b}(i,j) = \left\{ 
+%$$
+%{\sf lev}_{a,b}(i,j) = \left\{
 %  \begin{array}{l l}
-%   \max(i,j)				& \text{if $\min(i,j)=0$} \\ 
+%   \max(i,j)				& \text{if $\min(i,j)=0$} \\
 %   \min \left( {\begin{array}{l}
 %   		{\sf lev}_{a,b}(i-1,j) + 1 \\
 %		{\sf lev}_{a,b}(i,j-1) + 1 \\
@@ -220,12 +220,12 @@ where $l$ is a factor that ``smoothens'' the estimate by adding in a number of `
 %   	   \end{array}} \right) & \text{otherwise} \\
 %   \end{array} \right.
 %$$
-%%$$ 
+%%$$
 %%\begin{array}{lr}
 %%{\sf lev}_{a,b}(i,j) = & \\
-%%\quad\quad \left\{ 
+%%\quad\quad \left\{
 %%  \begin{array}{l l}
-%%   \max(i,j)				& \text{if $\min(i,j)=0$} \\ 
+%%   \max(i,j)				& \text{if $\min(i,j)=0$} \\
 %%   \min \left( {\begin{array}{l}
 %%   		{\sf lev}_{a,b}(i-1,j) + 1 \\
 %%		{\sf lev}_{a,b}(i,j-1) + 1 \\
@@ -270,7 +270,7 @@ where $l$ is a factor that ``smoothens'' the estimate by adding in a number of `
 %\caption{\label{Al:normalized}The \Tool\ distance normalization algorithm}
 %\end{algorithm}
 %
-%\paragraph{Limitations of Our Algorithm} The \Tool\ similarity analysis relies on certain simplifying assumptions. First, our normalization method assumes contiguity. We find this assumption reasonable, because secret data values are typically indivisible, and would therefore flow into a release point as one unit of information. Some measure of perturbation (e.g., splicing delimiters into the string) is also tolerable thanks to the quantitative nature of our algorithm. 
+%\paragraph{Limitations of Our Algorithm} The \Tool\ similarity analysis relies on certain simplifying assumptions. First, our normalization method assumes contiguity. We find this assumption reasonable, because secret data values are typically indivisible, and would therefore flow into a release point as one unit of information. Some measure of perturbation (e.g., splicing delimiters into the string) is also tolerable thanks to the quantitative nature of our algorithm.
 %
 %A second point relates to our choice of metric. There are certain value formats for which metrics other than Levenshtein distance are more adequate. A prevalent example is (high-volume) binary data, e.g. camera and microphone media, where similarity judgments could be cast as Hamming rather than Levenshtein distance. As explained above, in the interest of efficiency and simplicity, we instead record only a fixed-length prefix of large binary values, which can then be subjected to the Levenshtein metric. This works quite well in practice. (See \secref{experiments}.)
 %
@@ -299,7 +299,7 @@ where $l$ is a factor that ``smoothens'' the estimate by adding in a number of `
 %\Begin{
 %	\While{\true}{
 %		\SrcEvent\ {\tt r := s(p$_1$,$\ldots$,p$_n$) $\colon$}\; \Indp
-%			$D = \{ d_1,\ldots,d_k \}$ $\longleftarrow$ \GetData({\tt r})\; 
+%			$D = \{ d_1,\ldots,d_k \}$ $\longleftarrow$ \GetData({\tt r})\;
 %			{\bf H} $\longleftarrow$ {\bf H} $\cdot$ $($ {\tt s} $\rightarrow$ $\{ d_1,\ldots,d_n \}$ $)$\; \Indm
 %		\SnkEvent\ {\tt r' := s'(p'$_1$,$\ldots$,p'$_m$) $\colon$}\; \Indp
 %			$D' = \{ d'_1,\ldots,d'_t \}$ $\longleftarrow$ \GetData({\tt p'$_1$},$\ldots$,{\tt p'$_m$})\;
