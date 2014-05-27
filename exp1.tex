@@ -12,13 +12,13 @@ The complete list of benchmarks that we used can be found in \tableref{accuracyD
 
 \paragraph{Methodology}
 For each benchmark, we measured the number of true-positive (TP), false-positive (FP) and false-negative (FN) results, and then calculated the \emph{precision} and \emph{recall} of each tool using the formulas below:
-$$Precision = \frac{TP}{TP+FP}$$
-$$Recall = \frac{TP}{TP+FN}$$
+$$\text{\emph{Precision}} = \frac{TP}{TP+FP}$$
+$$\text{\emph{Recall}} = \frac{TP}{TP+FN}$$
 
 High precision implies that a technique returns few irrelevant results, whereas  high recall implies that it misses only few relevant ones. Since ideal techniques have both high recall and high precision, the F-measure is commonly used to combine
 both precision and recall into a single measure. The F-measure is defined as the harmonic mean of precision and recall, and is
 calculated as follows:
-$$F\texttt{-}Measure = 2*\frac{Precision * Recall}{Precision + Recall}$$
+$$\text{\emph{F-Measure}} = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
 
 The value of F-measure is high only when both precision and recall are high. We thus use the F-measure to evaluate the
 accuracy of each technique.}
@@ -32,6 +32,7 @@ accuracy of each technique.}
  \hline
  & & & & & & \\[-0.08in]
  & TPs & FPs & FNs & Precision & Recall & F-measure \\[0.06in]
+\hline
 \hline
  & & & & & & \\[-0.08in]
  TaintDroid & 31  &  17  &  0  &  0.66  &  1.00  &  0.66 (0.78) \\[0.06in]
@@ -58,10 +59,10 @@ We also provide the ``global'' score computed by considering all TP, FP and FN r
 %We summarize the results as (i) the average across all app scores, shown outside the parentheses (0.96 for \Tool\ vs 0.69 for %TaintDroid), as well as (ii) the global accuracy score, computed as TPs / (TPs + FPs + Fns) (0.91 vs 0.65).
 
 The results mark \Tool\ as visibly more accurate than TaintDroid. To further confirm this observation, we performed a 
-Welch's T-Test --- an adaptation of Student's T-Test intended to test the null hypothesis that the two population means (in our case, average F-measures) are equal. Welch's variant of the T-Test is used when two samples are having possibly unequal variances~\cite{Welch:1947}.
+Welch's T-Test: an adaptation of Student's T-Test intended to test the null hypothesis that the two population means (in our case, average F-measures) are equal. Welch's variant of the T-Test is used when two samples potentially have unequal variances~\cite{Welch:1947}.
 The result of applying the test rejects the null hypothesis and demonstrates that \Tool\ performs significantly better than TaintDroid (p-value $\ll$ 0.05),
 %The results mark \Tool\ as visibly more accurate than TaintDroid with respective accuracy scores of 0.96 vs 0.69, 
-which \emph{confirms H1}.}
+which confirms H1}.
 
 \paragraph{Discussion}
 Analysis of the per-benchmark findings reveals the following: 

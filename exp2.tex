@@ -12,11 +12,10 @@ Loop iterations perform intermediate data propagation steps. We then performed a
 
 The results, presented in \figref{overhead}, suggest that \JC{the overhead of} tag propagation is more dominant than \JC{that of} Bayesian analysis (with a ratio of roughly 2:1), even when the set of relevant values is naively over approximated. Discussion of the methodology underlying this experiment is provided in \appendixref{methodology}.
 
-\JCO{Yet, in the general case,}{In summary} H-BD trades overhead reduction for accuracy. 
-H2 then asserts that, \JC{\emph{in practice}}, the tradeoff posed by H-BD is effective. \JC{Below, we discuss our empirical evaluation of this hypothesis.}
+In general, H-BD trades overhead reduction for accuracy. 
+H2 then asserts that, \JC{\emph{in practice}}, the tradeoff posed by H-BD is effective. \JC{Below, we discuss our empirical evaluation of this hypothesis over real-life subjects.}
 
-\JC{\paragraph{Subjects} For accuracy comparison, we selected a set of real-world applications using the following methodology
-to avoid evaluators' bias:} We started from the 65 Google Play apps not chosen for the training phase. We then excluded 8 apps that do not have permission to access sensitive data and/or perform release operations (i.e., their manifest does not declare sufficient permissions out of {\tt INTERNET}, {\tt READ\_PHONE\_STATE}, {\tt SEND\_SMS}, etc), as well as 3 apps that we did not manage to install properly, resulting in 54 apps that installed successfully and exercise privacy sources and sinks.
+\paragraph{Subjects} To avoid evaluators' bias, we applied the following selection process: We started from the 65 Google Play apps not chosen for the training phase. We then excluded 8 apps that do not have permission to access sensitive data and/or perform release operations (i.e., their manifest does not declare sufficient permissions out of {\tt INTERNET}, {\tt READ\_PHONE\_STATE}, {\tt SEND\_SMS}, etc), as well as 3 apps that we did not manage to install properly, resulting in 54 apps that installed successfully and exercise privacy sources and sinks.
 
 \JC{
 The complete list of the application we used is given in \tableref{realworldAll} of \appendixref{completeRes}. 
@@ -69,7 +68,7 @@ The warnings reported by the H-BD configuration are also publicly available for 
 \hline
 \multicolumn{1}{|c|}{\multirow{2}{*}{App}} & \multicolumn{1}{c|}{\multirow{2}{*}{Domain}} & \multicolumn{1}{c||}{\multirow{2}{*}{Deep crawl?}} & \multicolumn{3}{c||}{H-BD} & \multicolumn{3}{c|}{T-BD} \\
 \cline{4-9}
-                                          &                       &                & no.       & dev. ID   &     loc.   &  no.      & dev. ID   &     loc. \\
+                                          &                       &                & number       & dev. ID   &     loc.   &  number      & dev. ID   &     loc. \\
 \hline
 atsoft.games.smgame                    &       games/arcade       & \checkmark &            & \checkmark & \checkmark &            & \checkmark & \checkmark \\
 com.antivirus                          &       communication      & \checkmark &            & \checkmark &            &            & \checkmark &            \\
@@ -93,7 +92,7 @@ com.goldtouch.mako                     &       news               & \checkmark &
 \end{tabular}
 %}% resizebox
 \end{center}
-\caption{\label{Ta:realworld}Findings due to the H-BD and T-BD \Tool\ configurations on 15/54 top-popular mobile apps (phone number abbreviated as no.; device ID as dev. ID; and location as loc.)}
+\caption{\label{Ta:realworld}Findings due to the H-BD and T-BD \Tool\ configurations on 15/54 top-popular mobile apps (phone number abbreviated as number; device ID as dev. ID; and location as loc.)}
 \end{small}
 \end{table*}
 
@@ -137,19 +136,19 @@ $\fbox{sink : arguments}$
 %For \Tool\ we report two numbers: The one in parentheses is the restriction of the findings to sources and sinks in common with TaintDroid, whereas the outer number counts all findings by \Tool.
 
 \JC{
-As \tableref{realworldAccuracy} indicates
+As \tableref{realworldAccuracy} indicates,
 %, and \tableref{realworldAll} affirms more explicitly, 
 the H-BD variant is more accurate than the T-BD variant overall (F-measure of 0.99 vs. 0.84).
 As in the experiment described in \secref{overhead}, we performed a Welch's T-Test on the F-Measure results to further confirm this observation. The test establishes that the difference between the accuracy of the tools is significant (p-value=0.003 $<$ 0.05).
-Moreover, H-BD has a lower number of crashes and lower runtime overhead, which \emph{confirms H2}.
+Moreover, H-BD has a lower number of crashes and lower runtime overhead, which confirms H2.
 
 \paragraph{Discussion}
 To give the reader a taste of the findings, we present in \figrefs{ios7}{fruitninja} two examples of potential leakages that \Tool\ (both the H-BD and the T-BD configurations) deemed legitimate.} 
 The instance in \figref{ios7} reflects the common scenario of obtaining the current (or last known) location, converting it into one or more addresses, and then releasing only the country or zip code. In the second instance, in \figref{fruitninja}, the 64-bit Android ID --- generated when the user first sets up the device --- is read via a call to \texttt{Settings$\$$Secure.getString(ANDROID\_ID)}. At the release point, into the file system, only a prefix of the Android ID consisting of the first 12 digits is published.
 
 \JC{
-As indicated in \tableref{realworld}, the findings by H-BD are more complete:
-it detects 27 leakages (vs. 13 for T-BD), with no false negative results and only one false positive.
+As \tableref{realworld} makes apparent, the findings by H-BD are more complete:
+It detects 27 leakages (versus 13 reports by T-BD), with no false-negative results and only one false positive.
 We attribute that to (i) the intrusive instrumentation required for tag propagation, which can cause instabilities, and (ii) inability to track tags through native code, as discussed below.
 }
 
@@ -158,7 +157,7 @@ TaintDroid casts on loading of third-party libraries. For this reason, certain f
 	For a technical explanation, see forum comment by William Enck, the TaintDroid moderator, at \href{https://groups.google.com/forum/\#!topic/android-security-discuss/U1fteEX26bk}{https://groups.google.com/forum/\#!topic/android-security-discuss/U1fteEX26bk}.
 }
 
-The secondary reason why H-BD is able to detect more leakages, e.g., in {\tt com.bitfitlabs.fingerprint.lockscreen}, is that this benchmark makes use of the {\tt mobileCore} module,\footnote{
+A secondary reason why H-BD is able to detect more leakages, e.g. in {\tt com.bitfitlabs.fingerprint.lockscreen}, is that this benchmark makes use of the {\tt mobileCore} module,\footnote{
 \href{https://www.mobilecore.com/sdk/}{https://www.mobilecore.com/sdk/}
 } which is a highly optimized and obfuscated library. We suspect that data flow breaks within this library, though we could not fully confirm this.
 
