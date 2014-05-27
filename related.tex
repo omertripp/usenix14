@@ -17,7 +17,16 @@ Graa et al.~\cite{GCCC:CSS12} propose a hybrid tainting technique that augments 
 
 In our experience, even precise static analysis techniques often suffer from a large number of false findings. These are due both to the qualitative (and coarse) nature of taint analysis and to other approximations (e.g., call-graph imprecisions). As for hybrid techniques, current techniques address challenges like implicit flows, where our experience suggests that for effective detection of data leakage by authentic apps, a more important dimension is the form and quantity of released information. In \secref{conclusion}, we outline a hybrid variant of \Tool\ that we plan to develop.
 
-\paragraph{Offline Algorithms} The AppsPlayground framework~\cite{RCE:CODASPY13}, built atop TaintDroid, performs dynamic analysis of mobile apps. It features automatic triggering of system events, including usage of contextual information to provide meaningful textual input. The AdRisk system~\cite{GZJS:SPWMN12} identifies potential privacy and security risks due to embedded in-app advertisement libraries. It first decouples the embedded ad libraries from the host app, and then applies state analysis to each of the libraries to approximate its behavior. 
-AdSplit~\cite{SDW:SEC12} handles third-party advertising services differently by recompiling the app to extract such services, which consequently run as separate processes under separate user IDs. 
+\paragraph{Offline Algorithms} The AppsPlayground framework~\cite{RCE:CODASPY13}, built atop TaintDroid, performs dynamic analysis of mobile apps. It features automatic triggering of system events, including usage of contextual information to provide meaningful textual input. The AdRisk system~\cite{GZJS:SPWMN12} identifies potential privacy and security risks due to embedded in-app advertisement libraries. It first decouples the embedded ad libraries from the host app, and then applies state analysis to each of the libraries to approximate its behavior.
+AdSplit~\cite{SDW:SEC12} handles third-party advertising services differently by recompiling the app to extract such services, which consequently run as separate processes under separate user IDs.
 
-Our approach is extensible to the offline setting, e.g. by piggybacking on unit/integration tests and detecting leakage bugs during the development and testing phases of a mobile app. Our technique can also be integrated with frameworks like AppsPlayground, which provide automated crawling capabilities, to perform offline testing for leakage vulnerabilities.
+Our approach is extensible to the offline setting, e.g. by piggybacking on unit/integration tests and detecting leakage bugs during the development and testing phases of a mobile app. Our technique can also be integrated with frameworks like AppsPlayground, which provide automated crawling capabilities, to perform offline testing for leakage vulnerabilities. 
+
+\JC{
+\paragraph{Techniques for Protecting Web Applications}
+There exist numerous static and dynamic approaches for preventing attacks on web applications, e.g., \cite{TPFSW:PLDI09,TPCCG:FASE13,GPTDTB:ISSTA11}. \emph{JR: Omer, more citations besides self-references?}
+Most relevant to our work are Sekar's taint-inference technique for deducing taint propagation by comparing inputs and outputs of a protected server-side application~\cite{Sekar:2009}, and a similar browser-resident technique developed in a subsequent work~\cite{Pelizzi:Sekar:2012}.
+While \Tool\ shares ideas with these approaches, it is explicitly designed for mobile devices and applications. 
+Curtsinger et al.~\cite{Curtsinger:Livshits:Zorn:Seifert:2011} apply a Bayesian classifier for identifying JavaScript syntax elements that are highly predictive of malware. The solution proposed in that work, ZOZZLE, is used for analyzing application code in a static manner, while \Tool\ operates dynamically and focuses on data values.
+
+}
