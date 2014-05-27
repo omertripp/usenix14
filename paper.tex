@@ -38,6 +38,7 @@
 \usepackage{gdefs}
 \usepackage{changebar}
 \usepackage{todonotes}
+\usepackage{balance}
 \usepackage{stmaryrd}
 \usepackage{supertabular}
 \usepackage[normalem]{ulem}
@@ -54,11 +55,16 @@
 
 \newcommand\SHORT[1]{#1}
 \newcommand\FULL[1]{}
-\newcommand\OC[1]{{\color{blue} #1}}
-\newcommand\JC[1]{{\color{purple} #1}}
-\newcommand\OCO[2]{{\color{blue} #1}{\color{red} [[ #2 ]]}}
-\newcommand\JCO[2]{{\color{purple} #1}{\color{red} [[ #2 ]]}}
+%\newcommand\OC[1]{{\color{blue} #1}}
+%\newcommand\JC[1]{{\color{purple} #1}}
+%\newcommand\OCO[2]{{\color{blue} #1}{\color{red} [[ #2 ]]}}
+%\newcommand\JCO[2]{{\color{purple} #1}{\color{red} [[ #2 ]]}}
 %\newcommand\added[1]{#1}
+\newcommand\OC[1]{#1}
+\newcommand\JC[1]{#1}
+\newcommand\OCO[2]{#1}
+\newcommand\JCO[2]{#1}
+
 
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash\hspace{0pt}}p{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
@@ -129,10 +135,12 @@ IBM Research, Israel
 \input{related}
 \input{conclusion}
 
+\begin{small}
 \bibliographystyle{plain}
 \bibliography{paper}
+\end{small}
 
-\newpage
+\balance
 
 \appendix
 \input{secondexp}

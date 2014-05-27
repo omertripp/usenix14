@@ -10,7 +10,7 @@ In this section, we describe the \Tool\ implementation, and present two sets of 
 
 Beyond the TaintDroid instrumentation scheme, the \Tool\ scheme specifies additional behaviors for sources and sinks within the SDK. At source points, a hook is added to record the private value read by the source statement (which acts as a reference value). At sink points, a hook is installed to apply Bayesian reasoning regarding the legitimacy of the sink.
 
-Analogously to TaintDroid, \Tool\ performs privacy monitoring over APIs for file-system access and manipulation, inter-application and socket communication, reading the phone's state and location, and sending of text messages. \Tool\ also monitors the HTTP interface, camera, microphone, bluetooth and contacts. \OC{As explained in \secref{pseudo}, each of the privacy sources monitored by \Tool\ is mirrored by a tag/feature. The full list of features is as follows: \emph{IMEI}, \emph{IMSI}, \emph{AndroidID}, \emph{Location}, \emph{Microphone}, \emph{Bluetooth}, \emph{Camera}, \emph{Contacts}, \emph{FileSystem}.}
+Analogously to TaintDroid, \Tool\ performs privacy monitoring over APIs for file-system access and manipulation, inter-application and socket communication, reading the phone's state and location, and sending of text messages. \Tool\ also monitors the HTTP interface, camera, microphone, bluetooth and contacts. \OC{As explained in \secref{pseudo}, each of the privacy sources monitored by \Tool\ is mirrored by a tag/feature. The full list of features is as follows: \emph{IMEI}, \emph{IMSI}, \emph{AndroidID}, \emph{Location}, \emph{Microphone}, \emph{Bluetooth}, \emph{Camera}, \emph{Contacts} and \emph{FileSystem}.}
 
 The \Tool\ implementation is configurable, enabling the user to switch between distance metrics as well as enable/disable information-flow tracking for precise/heuristic determination of relevant values. (See \secref{points}.) In our experiments, we tried both the Levenshtein and the Hamming metrics, but found no observable differences, and so we report the results only once. Our reasoning for why the metrics are indistinguishable is because we apply both to equal-length strings (see \secref{similarstr}), and have made sure to apply the same metric both offline and online, and so both metrics achieve a very similar effect in the Bayesian setting.
 
@@ -31,7 +31,7 @@ Illegitimate leaks that we detected offline mainly involved (i) location informa
 In our experimental evaluation of \Tool, we tested two hypotheses:
 \begin{compactenum}
 \item \underline{H1: Accuracy.}
-    Bayesian reasoning \JCO{}{about the legitimacy of information release}, as implemented in \Tool,
+    Bayesian reasoning, as implemented in \Tool,
      yields a significant improvement in leakage-detection accuracy compared to the baseline of information-flow tracking.
 \item \underline{H2: Applicability.} For real-life applications, \Tool\ remains effective under relaxation of the 
      tag-based method for detection of relevant values and its stability improves.

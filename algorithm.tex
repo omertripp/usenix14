@@ -72,7 +72,7 @@ $$
    		{\sf lev}(i-1,j) + 1 \\
 		{\sf lev}(i,j-1) + 1 \\
 		{\sf lev}(i-1,j-1) + \delta_{a_i \neq b_j} \\
-   	   \end{array}} \right) & \text{\emph{otherwise}} \\
+   	   \end{array}} \right) & \text{\emph{otherwise}}
    \end{array} \right.
 $$
 \end{small}
@@ -143,7 +143,7 @@ The danger, however, is that this equation would produce estimates of zero if th
 		\theta_{ijk} = \widehat{\Pr}(X_i = x_{ij} | Y=y_k) & = & \frac{\# D \{ X_i = x_{ij} \wedge Y = y_k \} + l}{\# D \{ Y = y_k \} + l \cdot J} \\
 	\end{array}
 \end{equation}
-where $l$ is a factor that ``smoothens'' the estimate by adding in a number of ``hallucinated'' examples that are assumed to be spread evenly across the possible values of $X_i$. In \secref{impl}, we provide concrete detail on the data sets and parameter values we used for our estimates.
+where $l$ is a factor that ``smoothens'' the estimate by adding in a number of ``hallucinated'' examples that are assumed to be spread evenly across the $J$ possible values of $X_i$. In \secref{impl}, we provide concrete detail on the data sets and parameter values we used for our estimates.
 
 
 %\algref{corealg} provides a pseudocode description of \Tool. The algorithm logs source calls, along with the read data values, into a set ${\bf H}$. When a sink event is fired, i.e. when a sink is about to be invoked, \Tool\ traverses all pairs $(d,d')$ of data values, such that $d$ is read by a source and $d'$ is about to flow into the sink call, and checks whether the values are similar beyond a parametric threshold ${\bf T}$. If so, then an alarm is triggered. We explain how data values are derived from source and sink arguments and how similarity judgments are executed in the following.

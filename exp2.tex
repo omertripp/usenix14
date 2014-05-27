@@ -7,7 +7,7 @@ Loop iterations perform intermediate data propagation steps. We then performed a
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{OverheadDiagram.pdf}
-\caption{\label{Fi:overhead}Overhead breakdown into tag propagation (dark grey) and Bayesian analysis at sink (pale grey), where horizontal (X) axis denotes the number of propagation steps and vertical (Y) axis denotes overhead}
+\caption{\label{Fi:overhead}Overhead breakdown into tag propagation and Bayesian analysis at sink}
 \end{figure}
 
 The results, presented in \figref{overhead}, suggest that \JC{the overhead of} tag propagation is more dominant than \JC{that of} Bayesian analysis (with a ratio of roughly 2:1), even when the set of relevant values is naively over approximated. Discussion of the methodology underlying this experiment is provided in \appendixref{methodology}.
@@ -108,13 +108,11 @@ $\fbox{sink : arguments}$
     profile/72/72_exitad.html?
     p1=RnVsbCtBbmRyb2lkK29uK0VtdWxhdG9y&
     p2=Y2RmMTUxMjRlYTRjN2FkNQ%3d%3d&
-    ...
-    LOCATION=$\textbf{IL}$&
-    ...
+    ... LOCATION=$\textbf{IL}$& ...
     MOBILE_COUNTRY_CODE=&
     NETWORK=WIFI
 \end{lstlisting}
-\caption{\label{Fi:ios7}Suppressed spurious leakage on {\tt ios7lockscreen}}
+\caption{\label{Fi:ios7}Suppressed spurious leakage on ios7lockscreen}
 \end{minipage}
 \hfill
 \begin{minipage}[b]{0.95\columnwidth}
@@ -129,7 +127,7 @@ $\fbox{sink : arguments}$
     ?><map><string
     name="openudid">$\textbf{cdf15124ea4c}$
 \end{lstlisting}
-\caption{\label{Fi:fruitninja}Suppressed spurious leakage on {\tt fruitninjafree}}
+\caption{\label{Fi:fruitninja}Suppressed spurious leakage on fruitninjafree}
 \end{minipage}
 \end{figure*}
 
@@ -157,9 +155,9 @@ TaintDroid casts on loading of third-party libraries. For this reason, certain f
 	For a technical explanation, see forum comment by William Enck, the TaintDroid moderator, at \href{https://groups.google.com/forum/\#!topic/android-security-discuss/U1fteEX26bk}{https://groups.google.com/forum/\#!topic/android-security-discuss/U1fteEX26bk}.
 }
 
-A secondary reason why H-BD is able to detect more leakages, e.g. in {\tt com.bitfitlabs.fingerprint.lockscreen}, is that this benchmark makes use of the {\tt mobileCore} module,\footnote{
+A secondary reason why H-BD is able to detect more leakages, e.g. in the lockscreen app, is that this benchmark makes use of the {\tt mobileCore} module,\footnote{
 \href{https://www.mobilecore.com/sdk/}{https://www.mobilecore.com/sdk/}
-} which is a highly optimized and obfuscated library. We suspect that data flow breaks within this library, though we could not fully confirm this.
+} which is a highly optimized and obfuscated library. We suspect that data-flow tracking breaks within this library, though we could not fully confirm this.
 
-At the same time, the loss in accuracy due to heuristic identification of relevant values is negligible, as suggested by the discussion in \secref{points}. H-BD triggers only one false alarm, on {\tt iso7lockscreen},
+At the same time, the loss in accuracy due to heuristic identification of relevant values is negligible, as suggested by the discussion in \secref{points}. H-BD triggers only one false alarm, on  ios7lockscreen,
 which is due to overlap between irrelevant values: extra information on the {\tt Location} object returned by a call to {\tt LocationManager.getLastKnownLocation(...)} and unrelated metadata passed into a {\tt ContextWrapper.startService(...)} request.  Finally, as expected, H-BD does not incur false negatives.

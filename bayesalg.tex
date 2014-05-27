@@ -4,7 +4,7 @@ In this section, we describe the complete \Tool\ algorithm. We then discuss enha
 
 \subsection{Pseudocode Description}\label{Se:pseudo}
 
-\algref{featureAlg} summarizes the main steps of \Tool. For simplicity, the description in \algref{featureAlg} assumes that source statements serve private data as their return value, though the \Tool\ implementation also supports other sources (e.g., callbacks like \texttt{onLocationChanged($\ldots$)}, where the private \texttt{Location} object is passed as a parameter). We also assume that each source maps to a unique privacy feature. Hence, when a source is invoked (i.e., the \texttt{OnSourceStatement} event fires), we obtain the unique tag corresponding to its respective feature via the 
+\algref{featureAlg} summarizes the main steps of \Tool. For simplicity, the description in \algref{featureAlg} assumes that source statements serve private data as their return value, though the \Tool\ implementation also supports other sources (e.g. callbacks like \texttt{onLocationChanged($\ldots$)}, where the private \texttt{Location} object is passed as a parameter). We also assume that each source maps to a unique privacy feature. Hence, when a source is invoked (i.e., the \texttt{OnSourceStatement} event fires), we obtain the unique tag corresponding to its respective feature via the 
 \texttt{GetFeature($\ldots$)} function. We then attach the tag to the return value $r$. Normal data flow obeys the standard rules of tag propagation, which 
 are provided e.g. by Enck et al.~\cite{EGCCJMS:OSDI10}. (See Table 1 there.)
 
@@ -144,7 +144,7 @@ These weaknesses of the tainting approach have led us to investigate an alternat
 a sink argument via a sequence of $\leq k$ field dereferences are deemed relevant.}
 Though in theory this might introduce both false positives (due to irrelevant values that are incidentally similar to the reference value) and false negatives (if $k$ is too small, blocking relevant values from view), in practice both are unlikely, as we confirmed experimentally. (See \secref{experiments}.) 
 
-For false positives, private values are often unique, and so incidental similarity to irrelevant values is improbable. For false negatives, the arguments flowing into privacy sinks are typically either {\tt String} objects or simple data structures. Also, because the number of privacy sinks is relatively small, and the number of complex data structures accepted by such sinks is even smaller, it is possible to specify relevant values manually for such data structures. We have encountered only a handful of data structures (e.g., the \texttt{android.content.Intent} class) that motivate a specification. 
+For false positives, private values are often unique, and so incidental similarity to irrelevant values is improbable. For false negatives, the arguments flowing into privacy sinks are typically either {\tt String} objects or simple data structures. Also, because the number of privacy sinks is relatively small, and the number of complex data structures accepted by such sinks is even smaller, it is possible to specify relevant values manually for such data structures. We have encountered only a handful of data structures (e.g. the \texttt{android.content.Intent} class) that motivate a specification. 
 
 
 
