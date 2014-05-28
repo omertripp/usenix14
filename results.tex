@@ -32,75 +32,184 @@ As in \tableref{accuracyDBenchDetails}, the F-measure is calculated by (a) avera
 %} which is a highly optimized and obfuscated library. We suspect that data flow breaks within this library, though we could not fully confirm this.
 %\end{compactitem}
 
-\begin{table*}[b]
-\setlength{\tabcolsep}{0.3em}
+\begin{table}[!ht]
 \begin{small}
+\setlength{\tabcolsep}{0.3em}
 \begin{center}
-\resizebox{\textwidth}{!}{
- \begin{tabular}{|l||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+\resizebox{0.5\textwidth}{!}{
+ \begin{tabular}{|l||C{2cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+  \hline
+Benchmark & Algorithm & TPs & FPs & FNs & Precision & Recall & F-measure  \\[0.04in]
+\hline\hline
+\multirow{2}{*}{ActivityCommunication1} &  \Tool &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
 \hline
- \multicolumn{1}{|c||}{}                           & \multicolumn{6}{c||}{} & \multicolumn{6}{c|}{} \\[-0.08in]
- \multicolumn{1}{|c||}{\multirow{3}{*}{Benchmark}} & \multicolumn{6}{c||}{\Tool} & \multicolumn{6}{c|}{TaintDroid} \\[0.04in]
- \cline{2-13}
- & & & & & & & & & & & & \\[-0.08in]
- & TPs & FPs & FNs & Precision & Recall & F-measure & TPs & FPs & FNs & Precision & Recall & F-measure \\[0.04in]
+\multirow{2}{*}{ActivityLifecycle1}  & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
 \hline
- & & & & & & & & & & & & \\[-0.10in]
-ActivityCommunication1  &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-ActivityLifecycle1      &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-ActivityLifecycle2      &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-ActivityLifecycle4      &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-Library2                &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-Obfuscation1            &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-PrivateDataLeak3        &  1  &  1  &  0  &  0.5  &  1  &  0.667  &  1  &  1  &  0  &  0.5  &  1  &  0.667  \\
-{\bf AnonymousClass1         }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-{\bf ArrayAccess1            }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-{\bf ArrayAccess2            }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-{\bf HashMapAccess1          }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-Button1                 &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-Button3                 &  2  &  0  &  0  &  1  &  1  &  1  &  2  &  0  &  0  &  1  &  1  &  1  \\
-{\bf Ordering1               }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-RegisterGlobal1         &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-DirectLeak1             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-{\bf FieldSensitivity2       }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-{\bf FieldSensitivity3       }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\
-{\bf FieldSensitivity4       }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-{\bf ImplicitFlow1           }&{\bf  0  }&{\bf  0  }&{\bf  2  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\
-InheritedObjects1       &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-{\bf ListAccess1             }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-{\bf LocationLeak1           }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-{\bf LocationLeak2           }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-Loop1                   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-Loop2                   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-ApplicationLifecycle1   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-ApplicationLifecycle3   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-MethodOverride1         &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-{\bf ObjectSensitivity1      }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-{\bf ObjectSensitivity2      }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
-Reflection1             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-Reflection2             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-Reflection3             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-Reflection4             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
-SourceCodeSpecific1     &  5  &  0  &  0  &  1  &  1  &  1  &  5  &  0  &  0  &  1  &  1  &  1  \\
-StaticInitialization1   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{ActivityLifecycle2} & \Tool      &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid  & 1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{ActivityLifecycle4}  & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{Library2}         & \Tool       &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{Obfuscation1}       & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{PrivateDataLeak3}  & \Tool      &  1  &  1  &  0  &  0.5  &  1  &  0.667  \\
+\cline{2-8}
+& TaintDroid &  1  &  1  &  0  &  0.5  &  1  &  0.667  \\
+\hline
+\multirow{2}{*}{{\bf AnonymousClass1         }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{{\bf ArrayAccess1            }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{{\bf ArrayAccess2            }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{{\bf HashMapAccess1          }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{Button1}  & \Tool               &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\ 
+\hline
+\multirow{2}{*}{Button3}   & \Tool              &  2  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  2  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{{\bf Ordering1               }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{RegisterGlobal1}   & \Tool      &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{DirectLeak1}    & \Tool         &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{{\bf FieldSensitivity2       }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{{\bf FieldSensitivity3       }}& \Tool&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\ 
+\hline
+\multirow{2}{*}{{\bf FieldSensitivity4       }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{{\bf ImplicitFlow1           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  2  }&{\bf  1  }&{\bf  0  }&{\bf  0  } \\
+\cline{2-8}
+& TaintDroid &{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\
+\hline
+\multirow{2}{*}{InheritedObjects1}     & \Tool  &  1  &  0  &  0  &  1  &  1  &  1 \\
+\cline{2-8}
+& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{{\bf ListAccess1             }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{{\bf LocationLeak1           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\ 
+\hline
+\multirow{2}{*}{{\bf LocationLeak2           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{Loop1}              & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{Loop2}    & \Tool               &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{ApplicationLifecycle1} & \Tool  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{ApplicationLifecycle3}  & \Tool &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{MethodOverride1}    & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{{\bf ObjectSensitivity1      }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{{\bf ObjectSensitivity2      }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+\cline{2-8}
+& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\hline
+\multirow{2}{*}{Reflection1}       & \Tool      &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{Reflection2}     & \Tool        &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{Reflection3}    & \Tool         &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{Reflection4}   & \Tool          &  1  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid & 1  &  0  &  0  &  1  &  1  &  1  \\ 
+\hline
+\multirow{2}{*}{SourceCodeSpecific1}   & \Tool  &  5  &  0  &  0  &  1  &  1  &  1  \\
+\cline{2-8}
+& TaintDroid &  5  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\multirow{2}{*}{StaticInitialization1} & \Tool  &  1  &  0  &  0  &  1  &  1  &  1 \\
+\cline{2-8}
+& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
 \hline
 \hline
- & & & & & & & & & & & & \\[-0.10in]
-Total                   &   29  &    1  &    2  &         &         &         &   31  &   17  &    0  &         &         &         \\
+\multirow{2}{*}{Total} & \Tool                   &   29  &    1  &    2  &         &         &        \\
+\cline{2-8}
+& TaintDroid  &   31  &   17  &    0  &         &         &         \\
 \hline
- & & & & & & & & & & & & \\[-0.10in]
-Average                 &      	&       &       &  0.98  &  0.97  &  0.96 (0.95)  &       &       &       &  0.66  &  1.00  &  0.66 (0.78)  \\
+\multirow{2}{*}{Average} & \Tool                 &      	&       &       &  0.98  &  0.97  &  0.96 (0.95)  \\  
+\cline{2-8}
+& TaintDroid &     &       &       &  0.66  &  1.00  &  0.66 (0.78)  \\
 \hline
  \end{tabular}
 }% resizebox
  \end{center}
- \caption{\label{Ta:accuracyDBenchDetails}Detailed summary of the results of the H1 experiment described in \secref{overhead}}
+\caption{\label{Ta:accuracyDBenchDetails}Detailed summary of the results of the H1 experiment described in \secref{overhead}}
 \end{small}
-\end{table*}
+\end{table}
 
 In \secref{practical}, we describe an experiment designed to evaluate our Bayesian analysis in ``pure'' form, i.e. without the support of information-flow tracking to detect relevant values. To make our description of this experiment complete, we include \tableref{realworldAll}, which provides a detailed summary of the results of this experiment across all benchmarks (including ones on which no leakages were detected).
 %%
 For comparability between the H-BD and T-BD configurations, we count different dynamic reports involving the same pair of source/sink APIs as a single leakage instance.
+
+\clearpage
 
 \begin{table*}
 \setlength{\tabcolsep}{0.3em}
