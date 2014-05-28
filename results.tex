@@ -1,5 +1,14 @@
-\section{Detailed Results \JCO{}{on Real-world Apps}}
-\label{Se:completeRes}
+\section{Overhead Measurement: Methodology}\label{Se:methodology}
+
+To complete the description in \secref{practical}, we now detail the methodology governing our overhead measurements. 
+The behavior of the benchmark app is governed by two user-controlled values: (i) the length $\ell$ of the source/sink data-flow path (which is proportional to the number of loop iterations) and (ii) the number $m$ of values reachable from sink arguments.
+
+Based on our actual benchmarks, as well as data reported in past studies~\cite{TPFSW:PLDI09}, we defined the ranges $1 \leq \ell \leq 19$ and $1 \leq m \leq 13 = \Sigma_{n=0}^{2} 3^n$. We then ran the parametric app atop a ``hybrid'' configuration of \Tool\ that simultaneously propagates tags and treats all the values flowing into a sink as relevant.
+%
+For each value of $\ell$, we executed the app 51 times, picking a value from the range $[0,2]$ for $n$ uniformly at random in each of the 51 runs. We then computed the average overhead over the runs, excluding the first (cold) run to remove unrelated initialization costs. The stacked columns in \figref{overhead} each correspond to a unique value of $\ell$.
+
+\section{Detailed Results \JCO{}{on Real-world Apps}}\label{Se:completeRes}
+
 \JC{
 \tableref{accuracyDBenchDetails} summarizes the results of the H1 experiment described in \secref{overhead}. 
 For each of the benchmarks, it specifies the number of true positive, false positive and false negative findings, as well as the calculated precision, recall and F-measure for the compared tools~-- \Tool\ and TaintDroid.
@@ -23,7 +32,7 @@ As in \tableref{accuracyDBenchDetails}, the F-measure is calculated by (a) avera
 %} which is a highly optimized and obfuscated library. We suspect that data flow breaks within this library, though we could not fully confirm this.
 %\end{compactitem}
 
-\begin{table*}
+\begin{table*}[b]
 \setlength{\tabcolsep}{0.3em}
 \begin{small}
 \begin{center}
@@ -89,10 +98,9 @@ Average                 &      	&       &       &  0.98  &  0.97  &  0.96 (0.95)
 \end{small}
 \end{table*}
 
-
-%In \secref{practical}, we describe an experiment designed to evaluate our Bayesian analysis in ``pure'' form, i.e. without the support of information-flow tracking to detect relevant values. To make our description of this experiment complete, we include \tableref{realworldAll}, which provides a detailed summary of the results of this experiment across all benchmarks (including ones on which no leakages were detected).
+In \secref{practical}, we describe an experiment designed to evaluate our Bayesian analysis in ``pure'' form, i.e. without the support of information-flow tracking to detect relevant values. To make our description of this experiment complete, we include \tableref{realworldAll}, which provides a detailed summary of the results of this experiment across all benchmarks (including ones on which no leakages were detected).
 %%
-%For comparability between the H-BD and T-BD configurations, we count different dynamic reports involving the same pair of source/sink APIs as a single leakage instance.
+For comparability between the H-BD and T-BD configurations, we count different dynamic reports involving the same pair of source/sink APIs as a single leakage instance.
 
 \begin{table*}
 \setlength{\tabcolsep}{0.3em}

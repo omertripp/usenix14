@@ -36,28 +36,38 @@ The warnings reported by the H-BD configuration are also publicly available for 
 	ggrcvqsbkiubmlb/faSUXmr9xK}.
 }}
 
-\begin{table*}
+\begin{table}
 %\setlength{\tabcolsep}{0.2em}
 \begin{small}
 \begin{center}
 %\resizebox{\textwidth}{!}{
-\begin{tabular}{|c||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+%\begin{tabular}{|c||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+% \hline
+% & & & & & & & \\[-0.08in]
+%      & TPs & FPs & FNs & Precision & Recall & F-measure & Crashes \\[0.06in]
+%\hline
+% & & & & & & & \\[-0.08in]
+% H-BD  & 27  & 1    & 0   &  0.99 & 1.00 & 0.99 (0.98) & 12 \\[0.06in]
+%\hline
+% & & & & & & & \\[-0.08in]
+% T-BD & 13    &  0   &   9      & 1.00 & 0.84 & 0.84 (0.74) & 22       \\[0.06in]
+%\hline
+%\end{tabular}
+\begin{tabular}{|l||c|c|c|c|c|c|c|}
+\hline
+      & TPs & FPs & FNs & Precision & Recall & F-measure & Crashes \\
+\hline
+\hline
+ H-BD  & 27  & 1    & 0   &  0.99 & 1.00 & 0.99 (0.98) & 12 \\
+\hline
+ T-BD & 13    &  0   &   9      & 1.00 & 0.84 & 0.84 (0.74) & 22 \\
  \hline
- & & & & & & & \\[-0.08in]
-      & TPs & FPs & FNs & Precision & Recall & F-measure & Crashes \\[0.06in]
-\hline
- & & & & & & & \\[-0.08in]
- H-BD  & 27  & 1    & 0   &  0.99 & 1.00 & 0.99 (0.98) & 12 \\[0.06in]
-\hline
- & & & & & & & \\[-0.08in]
- T-BD & 13    &  0   &   9      & 1.00 & 0.84 & 0.84 (0.74) & 22       \\[0.06in]
-\hline
 \end{tabular}
 %}% resizebox
  \end{center}
  \caption{\label{Ta:realworldAccuracy}Accuracy of H-BD and T-BD \Tool\ configurations}
 \end{small}
-\end{table*}
+\end{table}
 
 
 \begin{table*}
@@ -68,7 +78,7 @@ The warnings reported by the H-BD configuration are also publicly available for 
 \hline
 \multicolumn{1}{|c|}{\multirow{2}{*}{App}} & \multicolumn{1}{c|}{\multirow{2}{*}{Domain}} & \multicolumn{1}{c||}{\multirow{2}{*}{Deep crawl?}} & \multicolumn{3}{c||}{H-BD} & \multicolumn{3}{c|}{T-BD} \\
 \cline{4-9}
-                                          &                       &                & number       & dev. ID   &     loc.   &  number      & dev. ID   &     loc. \\
+                                          &                       &                & number       & dev. ID   &     location   &  number      & dev. ID   &     location \\
 \hline
 atsoft.games.smgame                    &       games/arcade       & \checkmark &            & \checkmark & \checkmark &            & \checkmark & \checkmark \\
 com.antivirus                          &       communication      & \checkmark &            & \checkmark &            &            & \checkmark &            \\
@@ -92,44 +102,9 @@ com.goldtouch.mako                     &       news               & \checkmark &
 \end{tabular}
 %}% resizebox
 \end{center}
-\caption{\label{Ta:realworld}Findings due to the H-BD and T-BD \Tool\ configurations on 15/54 top-popular mobile apps (phone number abbreviated as number; device ID as dev. ID; and location as loc.)}
+\caption{\label{Ta:realworld}Findings due to the H-BD and T-BD \Tool\ configurations on 15/54 top-popular mobile apps}
 \end{small}
 \end{table*}
-
-\begin{figure*}
-\begin{minipage}[b]{0.95\columnwidth}
-\begin{lstlisting}
-$\fbox{source : private value}$
-    GeoCoder.getFromLocation(...) : [ Lat: ..., Long: ...,
-	    Alt: ..., Bearing: ..., ..., $\textbf{IL}$ ]
-	
-$\fbox{sink : arguments}$
-  WebView.loadUrl(...) : http://linux.appwiz.com/
-    profile/72/72_exitad.html?
-    p1=RnVsbCtBbmRyb2lkK29uK0VtdWxhdG9y&
-    p2=Y2RmMTUxMjRlYTRjN2FkNQ%3d%3d&
-    ... LOCATION=$\textbf{IL}$& ...
-    MOBILE_COUNTRY_CODE=&
-    NETWORK=WIFI
-\end{lstlisting}
-\caption{\label{Fi:ios7}Suppressed spurious leakage on ios7lockscreen}
-\end{minipage}
-\hfill
-\begin{minipage}[b]{0.95\columnwidth}
-\begin{lstlisting}
-$\fbox{source : private value}$
-  Settings$\$$Secure.getString(...) : $\textbf{cdf15124ea4c7ad5}$
-
-$\fbox{sink : arguments}$
-  FileOutputStream.write(...) :
-    <?xml version='1.0' encoding='utf-8'
-    standalone='yes'
-    ?><map><string
-    name="openudid">$\textbf{cdf15124ea4c}$
-\end{lstlisting}
-\caption{\label{Fi:fruitninja}Suppressed spurious leakage on fruitninjafree}
-\end{minipage}
-\end{figure*}
 
 %For \Tool\ we report two numbers: The one in parentheses is the restriction of the findings to sources and sinks in common with TaintDroid, whereas the outer number counts all findings by \Tool.
 
@@ -143,6 +118,39 @@ Moreover, H-BD has a lower number of crashes and lower runtime overhead, which c
 \paragraph{Discussion}
 To give the reader a taste of the findings, we present in \figrefs{ios7}{fruitninja} two examples of potential leakages that \Tool\ (both the H-BD and the T-BD configurations) deemed legitimate.} 
 The instance in \figref{ios7} reflects the common scenario of obtaining the current (or last known) location, converting it into one or more addresses, and then releasing only the country or zip code. In the second instance, in \figref{fruitninja}, the 64-bit Android ID --- generated when the user first sets up the device --- is read via a call to \texttt{Settings$\$$Secure.getString(ANDROID\_ID)}. At the release point, into the file system, only a prefix of the Android ID consisting of the first 12 digits is published.
+
+\begin{figure}
+\begin{lstlisting}[numbers=none]
+$\fbox{source : private value}$
+    GeoCoder.getFromLocation(...) : [ Lat: ..., Long: ...,
+	    Alt: ..., Bearing: ..., ..., $\textbf{IL}$ ]
+	    
+$\fbox{sink : arguments}$
+  WebView.loadUrl(...) : http://linux.appwiz.com/
+    profile/72/72_exitad.html?
+    p1=RnVsbCtBbmRyb2lkK29uK0VtdWxhdG9y&
+    p2=Y2RmMTUxMjRlYTRjN2FkNQ%3d%3d&
+    ... LOCATION=$\textbf{IL}$& ...
+    MOBILE_COUNTRY_CODE=&
+    NETWORK=WIFI
+\end{lstlisting}
+\caption{\label{Fi:ios7}Suppressed warning on ios7lockscreen}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}[numbers=none]
+$\fbox{source : private value}$
+  Settings$\$$Secure.getString(...) : $\textbf{cdf15124ea4c7ad5}$
+  
+$\fbox{sink : arguments}$
+  FileOutputStream.write(...) :
+    <?xml version='1.0' encoding='utf-8'
+    standalone='yes'
+    ?><map><string
+    name="openudid">$\textbf{cdf15124ea4c}$
+\end{lstlisting}
+\caption{\label{Fi:fruitninja}Suppressed warning on fruitninjafree}
+\end{figure}
 
 \JC{
 As \tableref{realworld} makes apparent, the findings by H-BD are more complete:

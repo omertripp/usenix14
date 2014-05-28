@@ -18,35 +18,51 @@ $\text{\emph{Precision}} = \frac{TP}{TP+FP}$ & &
 $\text{\emph{Recall}} = \frac{TP}{TP+FN}$ \\
 \end{tabular}
 \end{center}
-High precision implies that a technique returns few irrelevant results, whereas  high recall implies that it misses only few relevant ones. Since ideal techniques have both high recall and high precision, the F-measure is commonly used to combine
+High precision implies that a technique returns few irrelevant results, whereas  high recall implies that it misses only few relevant ones. 
+
+Since ideal techniques have both high recall and high precision, the F-measure is commonly used to combine
 both precision and recall into a single measure. The F-measure is defined as the harmonic mean of precision and recall, and is
 calculated as follows:
-$$\text{\emph{F-Measure}} = 2 \times \frac{Precision \times Recall}{Precision + Recall}$$
+\begin{center}
+\begin{tabular}{c}
+$\text{\emph{F-Measure}} = 2 \times \frac{Precision \times Recall}{Precision + Recall}$
+\end{tabular}
+\end{center}
 The value of F-measure is high only when both precision and recall are high. We thus use the F-measure for accuracy evaluation.}
 
-\begin{table*}
+\begin{table}
 %\setlength{\tabcolsep}{0.2em}
 \begin{small}
 \begin{center}
 %\resizebox{\textwidth}{!}{
-\begin{tabular}{|c||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+\begin{tabular}{|l||c|c|c|c|c|c|}
+\hline
+ & TPs & FPs & FNs & Precision & Recall & F-measure \\
+\hline
+\hline
+ TaintDroid & 31  &  17  &  0  &  0.66  &  1.00  &  0.66 (0.78) \\
+\hline
+ \Tool & 29  &   1  &  2  &  0.98  &  0.97  &  0.96 (0.95) \\
  \hline
- & & & & & & \\[-0.08in]
- & TPs & FPs & FNs & Precision & Recall & F-measure \\[0.06in]
-\hline
-\hline
- & & & & & & \\[-0.08in]
- TaintDroid & 31  &  17  &  0  &  0.66  &  1.00  &  0.66 (0.78) \\[0.06in]
-\hline
- & & & & & & \\[-0.08in]
- \Tool & 29  &   1  &  2  &  0.98  &  0.97  &  0.96 (0.95) \\[0.06in]
-\hline
 \end{tabular}
+%\begin{tabular}{|c||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+% \hline
+% & & & & & & \\[-0.08in]
+% & TPs & FPs & FNs & Precision & Recall & F-measure \\[0.06in]
+%\hline
+%\hline
+% & & & & & & \\[-0.08in]
+% TaintDroid & 31  &  17  &  0  &  0.66  &  1.00  &  0.66 (0.78) \\[0.06in]
+%\hline
+% & & & & & & \\[-0.08in]
+% \Tool & 29  &   1  &  2  &  0.98  &  0.97  &  0.96 (0.95) \\[0.06in]
+%\hline
+%\end{tabular}
 %}% resizebox
  \end{center}
  \caption{\label{Ta:accuracyDBench}Accuracy of \Tool\ and TaintDroid on DroidBench}
 \end{small}
-\end{table*}
+\end{table}
 
 \JC{\paragraph{Results}
 The results obtained for both TaintDroid and \Tool\ on version 1.1 of DroidBench are summarized in \tableref{accuracyDBench} and presented in detail in \tableref{accuracyDBenchDetails}. The findings reported by \Tool\ are also publicly available.\footnote{
@@ -86,8 +102,7 @@ private String obfuscateIMEI(String imei) {
     switch(c) {
       case '0': result += 'a'; break;
       case '1': result += 'b'; break;
-      case '2': result += 'c'; break;
-      ...; } }
+      case '2': result += 'c'; break; ...; } }
 \end{lstlisting}
 \caption{\label{Fi:dataTransform} Fragment from the DroidBench {\tt ImplicitFlow1} benchmark, which applies a proprietary transformation to private data}
 \end{figure}

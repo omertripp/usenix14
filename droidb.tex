@@ -1,0 +1,65 @@
+\begin{table*}[b]
+\setlength{\tabcolsep}{0.3em}
+\begin{small}
+\begin{center}
+\resizebox{\textwidth}{!}{
+ \begin{tabular}{|l||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+\hline
+ \multicolumn{1}{|c||}{}                           & \multicolumn{6}{c||}{} & \multicolumn{6}{c|}{} \\[-0.08in]
+ \multicolumn{1}{|c||}{\multirow{3}{*}{Benchmark}} & \multicolumn{6}{c||}{\Tool} & \multicolumn{6}{c|}{TaintDroid} \\[0.04in]
+ \cline{2-13}
+ & & & & & & & & & & & & \\[-0.08in]
+ & TPs & FPs & FNs & Precision & Recall & F-measure & TPs & FPs & FNs & Precision & Recall & F-measure \\[0.04in]
+\hline
+ & & & & & & & & & & & & \\[-0.10in]
+ActivityCommunication1  &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+ActivityLifecycle1      &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+ActivityLifecycle2      &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+ActivityLifecycle4      &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+Library2                &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+Obfuscation1            &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+PrivateDataLeak3        &  1  &  1  &  0  &  0.5  &  1  &  0.667  &  1  &  1  &  0  &  0.5  &  1  &  0.667  \\
+{\bf AnonymousClass1         }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+{\bf ArrayAccess1            }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+{\bf ArrayAccess2            }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+{\bf HashMapAccess1          }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+Button1                 &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+Button3                 &  2  &  0  &  0  &  1  &  1  &  1  &  2  &  0  &  0  &  1  &  1  &  1  \\
+{\bf Ordering1               }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+RegisterGlobal1         &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+DirectLeak1             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+{\bf FieldSensitivity2       }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+{\bf FieldSensitivity3       }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\
+{\bf FieldSensitivity4       }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+{\bf ImplicitFlow1           }&{\bf  0  }&{\bf  0  }&{\bf  2  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\
+InheritedObjects1       &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+{\bf ListAccess1             }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+{\bf LocationLeak1           }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+{\bf LocationLeak2           }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+Loop1                   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+Loop2                   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+ApplicationLifecycle1   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+ApplicationLifecycle3   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+MethodOverride1         &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+{\bf ObjectSensitivity1      }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+{\bf ObjectSensitivity2      }&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }&{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+Reflection1             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+Reflection2             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+Reflection3             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+Reflection4             &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+SourceCodeSpecific1     &  5  &  0  &  0  &  1  &  1  &  1  &  5  &  0  &  0  &  1  &  1  &  1  \\
+StaticInitialization1   &  1  &  0  &  0  &  1  &  1  &  1  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\hline
+\hline
+ & & & & & & & & & & & & \\[-0.10in]
+Total                   &   29  &    1  &    2  &         &         &         &   31  &   17  &    0  &         &         &         \\
+\hline
+ & & & & & & & & & & & & \\[-0.10in]
+Average                 &      	&       &       &  0.98  &  0.97  &  0.96 (0.95)  &       &       &       &  0.66  &  1.00  &  0.66 (0.78)  \\
+\hline
+ \end{tabular}
+}% resizebox
+ \end{center}
+ \caption{\label{Ta:accuracyDBenchDetails}Detailed summary of the results of the H1 experiment described in \secref{overhead}}
+\end{small}
+\end{table*}

@@ -1,13 +1,10 @@
 \section{Privacy Features}\label{Se:algorithm}
 
 In this section we develop, based on the mathematical background in \secref{bayes}, an algorithm to compute the conditional likelihood of legitimate versus illegitimate data release given privacy features $F_i$. With such an algorithm in place, given values $v_i$ for the features $F_i$, we obtain
-$$
-v_{leg} = \Pr(\emph{legitimate} | \left[ F_1=v_1,\ldots,F_n=v_n \right])
-$$
-and
-$$
-v_{illeg} = \Pr(\emph{illegitimate} | \left[ F_1=v_1,\ldots,F_n=v_n \right])
-$$
+\begin{align}
+v_{leg} & = \Pr(\emph{legitimate} | \left[ F_1=v_1,\ldots,F_n=v_n \right]) \nonumber \\
+v_{illeg} & = \Pr(\emph{illegitimate} | \left[ F_1=v_1,\ldots,F_n=v_n \right]) \nonumber
+\end{align}
 Bayesian classification then reduces to comparing between $v_{leg}$ and $v_{illeg}$, where the label corresponding to the greater of these values is the classification result.
 
 
@@ -116,9 +113,9 @@ Given string metric $d(x,y)$ and pair $(u,v)$ of reference value $u$ and relevan
 
 To ensure that comparisons are still meaningful under length adjustment, we decompose private values into indivisible \emph{information units}. These are components of the private value that cannot be broken further, and so comparing them with a shorter value mandates that the shorter value be padded. In our specification, the phone, IMEI and IMSI numbers consist of only one unit of information.
 %
-The {\tt Location} object is an example of a data structure that consists of several distinct information units. These include the integral and fractional parts of the longitude and latitude values, etc. \OC{\Tool\ handles objects that decompose into multiple information units by treating each unit as a separate object and applying the steps above to each of the units in turn.}
+The {\tt Location} object is an example of a data structure that consists of several distinct information units. These include the integral and fractional parts of the longitude and latitude values, etc. \OC{\Tool\ handles objects that decompose into multiple information units by treating each unit as a separate object and applying the steps above to each unit in turn.}
 %
-The notion of information units guards \Tool\ against ill-founded judgments, such as treating release of a single digit from the IMEI number as strong evidence for leakage.
+The notion of information units guards \Tool\ against ill-founded judgments, such as treating release of a single IMEI digit as strong evidence for leakage.
 
 \subsection{Estimating Probabilities}\label{Se:estprob}
 
