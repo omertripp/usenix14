@@ -11,14 +11,14 @@ as both TaintDroid and \Tool\ were naturally unable to detect leakages in these 
 The complete list of benchmarks that we used can be found in \tableref{accuracyDBenchDetails} of \appendixref{completeRes}.
 
 \paragraph{Methodology}
-For each benchmark, we measured the number of true-positive (TP), false-positive (FP) and false-negative (FN) results, and then calculated the \emph{precision} and \emph{recall} of each tool using the formulas below:
+For each benchmark, we measured the number of true positive (TP), false positive (FP) and false negative (FN) results. We then summarized the results and calculated the overall \emph{precision} and \emph{recall} of each tool using the formulas below:
 \begin{center}
 \begin{tabular}{ccc}
 $\text{\emph{Precision}} = \frac{TP}{TP+FP}$ & &
 $\text{\emph{Recall}} = \frac{TP}{TP+FN}$ \\
 \end{tabular}
 \end{center}
-High precision implies that a technique returns few irrelevant results, whereas  high recall implies that it misses only few relevant ones. 
+High precision implies that a technique returns few irrelevant results, whereas  high recall implies that it misses only few relevant ones.
 
 Since ideal techniques have both high recall and high precision, the F-measure is commonly used to combine
 both precision and recall into a single measure. The F-measure is defined as the harmonic mean of precision and recall, and is
@@ -40,9 +40,9 @@ The value of F-measure is high only when both precision and recall are high. We 
  & TPs & FPs & FNs & Precision & Recall & F-measure \\
 \hline
 \hline
- TaintDroid & 31  &  17  &  0  &  0.66  &  1.00  &  0.66 (0.78) \\
+ TaintDroid & 31  &  17  &  0  &  0.64  &  1.00  &  0.78 \\
 \hline
- \Tool & 29  &   1  &  2  &  0.98  &  0.97  &  0.96 (0.95) \\
+ \Tool & 29  &   1  &  2  &  0.96  &  0.93  &  0.94 \\
  \hline
 \end{tabular}
 %\begin{tabular}{|c||C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
@@ -60,6 +60,7 @@ The value of F-measure is high only when both precision and recall are high. We 
 %\end{tabular}
 %}% resizebox
  \end{center}
+ \vspace{-0.1in}
  \caption{\label{Ta:accuracyDBench}Accuracy of \Tool\ and TaintDroid on DroidBench}
 \end{small}
 \end{table}
@@ -67,23 +68,36 @@ The value of F-measure is high only when both precision and recall are high. We 
 \JC{\paragraph{Results}
 The results obtained for both TaintDroid and \Tool\ on version 1.1 of DroidBench are summarized in \tableref{accuracyDBench} and presented in detail in \tableref{accuracyDBenchDetails}. The findings reported by \Tool\ are also publicly available.\footnote{
 	See archive file
-	\href{researcher.ibm.com/researcher/files/us-otripp/droidbench.zip}{researcher.ibm.com/researcher/files/us-otripp/droidbench.zip}.
+	 \href{researcher.ibm.com/researcher/files/us-otripp/droidbench.zip}{researcher.ibm.com/researcher/files/us-otripp/droidbench.zip}.
 }
 
-Overall, TaintDroid detects 31 true leakages while also reporting 17 false positives, whereas our approach suffers from 2 false negatives, discovering 29 of the true leakages while flagging only 1 false alarm.
-We averaged the F-measure calculation across all benchmarks (0.66 for TaintDroid vs 0.96 for \Tool). 
-We also provide the ``global'' score computed by considering all TP, FP and FN results together in parentheses  (0.78 vs 0.95).
+Overall, TaintDroid detects 31 true leakages while also reporting 17 false positives, whereas \Tool\ suffers from 2 false negatives, discovering 29 of the true leakages while flagging only 1 false alarm. 
+The recall of both TaintDroid and \Tool\ is high (1 and 0.93, respectively) due to a low number of false negative results. 
+Yet, the precision of TaintDroid is much lower than that of \Tool\ (0.64 vs. 0.96), due to a high number of false positives. 
+The overall F-measure is thus lower for TaintDroid than for \Tool\ (0.78 vs. 0.94).
+%We averaged the F-measure calculation across all benchmarks (0.66 for TaintDroid vs 0.96 for \Tool).
+%We also provide the ``global'' score computed by considering all TP, FP and FN results together in parentheses  (0.78 vs 0.95).
 
 %We summarize the results as (i) the average across all app scores, shown outside the parentheses (0.96 for \Tool\ vs 0.69 for %TaintDroid), as well as (ii) the global accuracy score, computed as TPs / (TPs + FPs + Fns) (0.91 vs 0.65).
 
-The results mark \Tool\ as visibly more accurate than TaintDroid. To further confirm this observation, we performed
-Welch's T-Test: an adaptation of Student's T-Test intended to test the null hypothesis that the two population means (in our case, average F-measures) are equal. Welch's variant of the T-Test is used when two samples potentially have unequal variances~\cite{Welch:1947}.
-The result of applying the test rejects the null hypothesis and demonstrates that \Tool\ performs significantly better than TaintDroid (p-value $\ll$ 0.05),
-%The results mark \Tool\ as visibly more accurate than TaintDroid with respective accuracy scores of 0.96 vs 0.69, 
-which confirms H1}.
+The results mark \Tool\ as visibly more accurate than TaintDroid. To further confirm this result, we performed a two-tail McNemar test, considering 48 observations for each tool. These observations correspond to finding reported in \tableref{accuracyDBenchDetails}: 31 true positives and 17 that potentially trigger a false positive result. 
+Each observation is a boolean value that represents the accuracy of the tool and is assumed to be from a Bernoulli distribution.
+We then checked whether the difference in accuracy is statistically significant by testing the null hypothesis that the set of 48 observations from TaintDroid comes from the same Bernoulli distribution as the set of 48 observations from \Tool.
 
+We found that TaintDroid was accurate in 31 out of 48 cases, and \Tool\ was accurate in 45 out of 48 cases. We built the
+2$\times$2 contingency table showing when each tool was correct and applied a two-tail McNemar test.
+%using a calculator available online.\footnote{\href{http://vassarstats.net/propcorr.html}{http://vassarstats.net/propcorr.html}}
+We found a p-value of 0.001, which rejects the null hypothesis that the observations come from the same underlying distribution and provides evidence that \Tool\ is more accurate than TaintDroid, confirming H1.
+}
+
+%Welch's T-Test: an adaptation of Student's T-Test intended to test the null hypothesis that the two population means (in our case, average F-measures) are equal. Welch's variant of the T-Test is used when two samples potentially have unequal variances~\cite{Welch:1947}.
+%The result of applying the test rejects the null hypothesis and demonstrates that \Tool\ performs significantly better than TaintDroid (p-value $\ll$ 0.05),
+%%The results mark \Tool\ as visibly more accurate than TaintDroid with respective accuracy scores of 0.96 vs 0.69,
+%which confirms H1}.
+
+\vspace{-0.1in}
 \paragraph{Discussion}
-Analysis of the per-benchmark findings reveals the following: 
+Analysis of the per-benchmark findings reveals the following:
 First, the 2 false negatives of
 \Tool\ on {\tt ImplicitFlow1} are both due to custom (i.e., non-standard) data transformations, which are outside the current scope of \Tool. An illustrative fragment from the {\tt ImplicitFlow1} code is shown in \figref{dataTransform}. The {\tt obfuscateIMEI($\ldots$)} transformation maps IMEI digits to English letters, which is a non-standard behavior that is unlikely to arise in an authentic app.
 

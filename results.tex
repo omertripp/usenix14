@@ -1,6 +1,6 @@
 \section{Overhead Measurement: Methodology}\label{Se:methodology}
 
-To complete the description in \secref{practical}, we now detail the methodology governing our overhead measurements. 
+To complete the description in \secref{practical}, we now detail the methodology governing our overhead measurements.
 The behavior of the benchmark app is governed by two user-controlled values: (i) the length $\ell$ of the source/sink data-flow path (which is proportional to the number of loop iterations) and (ii) the number $m$ of values reachable from sink arguments.
 
 Based on our actual benchmarks, as well as data reported in past studies~\cite{TPFSW:PLDI09}, we defined the ranges $1 \leq \ell \leq 19$ and $1 \leq m \leq 13 = \Sigma_{n=0}^{2} 3^n$. We then ran the parametric app atop a ``hybrid'' configuration of \Tool\ that simultaneously propagates tags and treats all the values flowing into a sink as relevant.
@@ -10,15 +10,19 @@ For each value of $\ell$, we executed the app 51 times, picking a value from the
 \section{Detailed Results \JCO{}{on Real-world Apps}}\label{Se:completeRes}
 
 \JC{
-\tableref{accuracyDBenchDetails} summarizes the results of the H1 experiment described in \secref{overhead}. 
-For each of the benchmarks, it specifies the number of true-positive, false-positive and false-negative findings, as well as the calculated precision, recall and F-measure for the compared tools, \Tool\ and TaintDroid.
-The benchmarks on which the tools differ are highlighted for convenience. 
-The F-measure is calculated by (a) averaging the corresponding values across all benchmarks and (b) directly by considering the total number of TPs, FPs and FNs results. Both values are given in \tableref{accuracyDBenchDetails}, outside and inside of the parentheses, respectively: 0.66 for TaintDroid vs 0.96 for \Tool\ in the former case, and 0.78 vs 0.95 in the latter.
+\tableref{accuracyDBenchDetails} summarizes the results of the H1 experiment described in \secref{overhead}.
+For each of the benchmarks, it specifies the number of true positive, false positive and false negative findings 
+%, as well as the calculated precision, recall and F-measure
+for the compared tools, \Tool\ and TaintDroid.
+The benchmarks on which the tools differ are highlighted for convenience.
+%The F-measure is calculated by (a) averaging the corresponding values across all benchmarks and (b) directly by considering the total number of TPs, FPs and FNs results. Both values are given in \tableref{accuracyDBenchDetails}, outside and inside of the parentheses, respectively: 0.66 for TaintDroid vs 0.96 for \Tool\ in the former case, and 0.78 vs 0.95 in the latter.
 
-Similarly, \tableref{realworldAll} summarizes the results of the H2 experiment described in \secref{practical}. 
-The first two columns of \tableref{realworldAll} list the applications and their respective domain, and the third column denotes whether crawling was exhaustive. 
-Then, the number of crashes, true-positive, false-positive and false-negative findings, as well as the calculated precision, recall and F-measure are reported for both the H-BD and the T-BD variants of \Tool. 
-As in \tableref{accuracyDBenchDetails}, the F-measure is calculated by (a) averaging the corresponding values across all benchmarks (0.99 for H-BD vs 0.84 for T-BD), and (b) directly by considering the total number of TPs, FPs and FNs (0.98 vs 0.74).
+Similarly, \tableref{realworldAll} summarizes the results of the H2 experiment described in \secref{practical}.
+The first two columns of \tableref{realworldAll} list the applications and their respective domain, and the third column denotes whether crawling was exhaustive.
+Then, the number of crashes, true positive, false positive and false negative findings
+%, as well as the calculated precision, recall and F-measure 
+are reported for both the H-BD and the T-BD variants of \Tool.
+%As in \tableref{accuracyDBenchDetails}, the F-measure is calculated by (a) averaging the corresponding values across all benchmarks (0.99 for H-BD vs 0.84 for T-BD), and (b) directly by considering the total number of TPs, FPs and FNs (0.98 vs 0.74).
 }
 
 %As \tableref{realworldAll} highlights, the difference in leakage alarms by the H-BD and T-BD variants is dramatic. We have analyzed it, and came to the following explanations:
@@ -32,265 +36,515 @@ As in \tableref{accuracyDBenchDetails}, the F-measure is calculated by (a) avera
 %} which is a highly optimized and obfuscated library. We suspect that data flow breaks within this library, though we could not fully confirm this.
 %\end{compactitem}
 
+%\begin{table}[!ht]
+%\begin{small}
+%\setlength{\tabcolsep}{0.3em}
+%\begin{center}
+%\resizebox{0.5\textwidth}{!}{
+% \begin{tabular}{|l||C{2cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+%  \hline
+%Benchmark & Algorithm & TPs & FPs & FNs & Precision & Recall & F-measure  \\[0.04in]
+%\hline\hline
+%\multirow{2}{*}{ActivityCommunication1} &  \Tool &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{ActivityLifecycle1}  & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{ActivityLifecycle2} & \Tool      &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid  & 1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{ActivityLifecycle4}  & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{Library2}         & \Tool       &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{Obfuscation1}       & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{PrivateDataLeak3}  & \Tool      &  1  &  1  &  0  &  0.5  &  1  &  0.667  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  1  &  0  &  0.5  &  1  &  0.667  \\
+%\hline
+%\multirow{2}{*}{{\bf AnonymousClass1         }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{{\bf ArrayAccess1            }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{{\bf ArrayAccess2            }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{{\bf HashMapAccess1          }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{Button1}  & \Tool               &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{Button3}   & \Tool              &  2  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  2  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{{\bf Ordering1               }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{RegisterGlobal1}   & \Tool      &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{DirectLeak1}    & \Tool         &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{{\bf FieldSensitivity2       }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{{\bf FieldSensitivity3       }}& \Tool&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\
+%\hline
+%\multirow{2}{*}{{\bf FieldSensitivity4       }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{{\bf ImplicitFlow1           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  2  }&{\bf  1  }&{\bf  0  }&{\bf  0  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\
+%\hline
+%\multirow{2}{*}{InheritedObjects1}     & \Tool  &  1  &  0  &  0  &  1  &  1  &  1 \\
+%\cline{2-8}
+%& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{{\bf ListAccess1             }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{{\bf LocationLeak1           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{{\bf LocationLeak2           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{Loop1}              & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{Loop2}    & \Tool               &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{ApplicationLifecycle1} & \Tool  &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{ApplicationLifecycle3}  & \Tool &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{MethodOverride1}    & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{{\bf ObjectSensitivity1      }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{{\bf ObjectSensitivity2      }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
+%\cline{2-8}
+%& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+%\hline
+%\multirow{2}{*}{Reflection1}       & \Tool      &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{Reflection2}     & \Tool        &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{Reflection3}    & \Tool         &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{Reflection4}   & \Tool          &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid & 1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{SourceCodeSpecific1}   & \Tool  &  5  &  0  &  0  &  1  &  1  &  1  \\
+%\cline{2-8}
+%& TaintDroid &  5  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\multirow{2}{*}{StaticInitialization1} & \Tool  &  1  &  0  &  0  &  1  &  1  &  1 \\
+%\cline{2-8}
+%& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+%\hline
+%\hline
+%\multirow{2}{*}{Total} & \Tool                   &   29  &    1  &    2  &         &         &        \\
+%\cline{2-8}
+%& TaintDroid  &   31  &   17  &    0  &         &         &         \\
+%\hline
+%\multirow{2}{*}{Average} & \Tool                 &      	&       &       &  0.98  &  0.97  &  0.96 (0.95)  \\
+%\cline{2-8}
+%& TaintDroid &     &       &       &  0.66  &  1.00  &  0.66 (0.78)  \\
+%\hline
+% \end{tabular}
+%}% resizebox
+% \end{center}
+%\caption{\label{Ta:accuracyDBenchDetails}Detailed summary of the results of the H1 experiment described in \secref{overhead}}
+%\end{small}
+%\end{table}
+
 \begin{table}[!ht]
 \begin{small}
 \setlength{\tabcolsep}{0.3em}
 \begin{center}
-\resizebox{0.5\textwidth}{!}{
- \begin{tabular}{|l||C{2cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
+\resizebox{0.45\textwidth}{!}{
+ \begin{tabular}{|l||C{2cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|}
   \hline
-Benchmark & Algorithm & TPs & FPs & FNs & Precision & Recall & F-measure  \\[0.04in]
+Benchmark & Algorithm & TPs & FPs & FNs \\[0.04in]
 \hline\hline
-\multirow{2}{*}{ActivityCommunication1} &  \Tool &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{ActivityCommunication1} & \Tool &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{ActivityLifecycle1}  & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{ActivityLifecycle1}     & \Tool     &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0 \\
 \hline
-\multirow{2}{*}{ActivityLifecycle2} & \Tool      &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid  & 1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{ActivityLifecycle2}     & \Tool      &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid  & 1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{ActivityLifecycle4}  & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{ActivityLifecycle4}     & \Tool     &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{Library2}         & \Tool       &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{Library2}               & \Tool     &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{Obfuscation1}       & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{Obfuscation1}           & \Tool     &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{PrivateDataLeak3}  & \Tool      &  1  &  1  &  0  &  0.5  &  1  &  0.667  \\
-\cline{2-8}
-& TaintDroid &  1  &  1  &  0  &  0.5  &  1  &  0.667  \\
+\multirow{2}{*}{PrivateDataLeak3}       & \Tool     &  1  &  1  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  1  &  0  \\
 \hline
-\multirow{2}{*}{{\bf AnonymousClass1         }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf AnonymousClass1         }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{{\bf ArrayAccess1            }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf ArrayAccess1            }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{{\bf ArrayAccess2            }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf ArrayAccess2            }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{{\bf HashMapAccess1          }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf HashMapAccess1          }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{Button1}  & \Tool               &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\ 
+\multirow{2}{*}{Button1}  & \Tool               &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{Button3}   & \Tool              &  2  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  2  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{Button3}   & \Tool              &  2  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  2  &  0  &  0  \\
 \hline
-\multirow{2}{*}{{\bf Ordering1               }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf Ordering1               }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{RegisterGlobal1}   & \Tool      &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{RegisterGlobal1}   & \Tool      &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid  &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{DirectLeak1}    & \Tool         &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{DirectLeak1}    & \Tool         &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{{\bf FieldSensitivity2       }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf FieldSensitivity2       }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{{\bf FieldSensitivity3       }}& \Tool&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\ 
+\multirow{2}{*}{{\bf FieldSensitivity3       }}& \Tool&{\bf  1  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  1  }&{\bf  0  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{{\bf FieldSensitivity4       }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf FieldSensitivity4       }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{{\bf ImplicitFlow1           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  2  }&{\bf  1  }&{\bf  0  }&{\bf  0  } \\
-\cline{2-8}
-& TaintDroid &{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  }\\
+\multirow{2}{*}{{\bf ImplicitFlow1           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  2  }\\
+\cline{2-5}
+& TaintDroid &{\bf  2  }&{\bf  0  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{InheritedObjects1}     & \Tool  &  1  &  0  &  0  &  1  &  1  &  1 \\
-\cline{2-8}
-& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{InheritedObjects1}     & \Tool  &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid  &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{{\bf ListAccess1             }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf ListAccess1             }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{{\bf LocationLeak1           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\ 
+\multirow{2}{*}{{\bf LocationLeak1           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{{\bf LocationLeak2           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf LocationLeak2           }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{Loop1}              & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{Loop1}              & \Tool     &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{Loop2}    & \Tool               &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{Loop2}    & \Tool               &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{ApplicationLifecycle1} & \Tool  &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{ApplicationLifecycle1} & \Tool  &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{ApplicationLifecycle3}  & \Tool &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{ApplicationLifecycle3}  & \Tool &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{MethodOverride1}    & \Tool     &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{MethodOverride1}    & \Tool     &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{{\bf ObjectSensitivity1      }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf ObjectSensitivity1      }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  1  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{{\bf ObjectSensitivity2      }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  1  }&{\bf  1  } \\
-\cline{2-8}
-& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }&{\bf  0  }&{\bf  1  }&{\bf  0  }\\
+\multirow{2}{*}{{\bf ObjectSensitivity2      }}& \Tool&{\bf  0  }&{\bf  0  }&{\bf  0  }\\
+\cline{2-5}
+& TaintDroid &{\bf  0  }&{\bf  2  }&{\bf  0  }\\
 \hline
-\multirow{2}{*}{Reflection1}       & \Tool      &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{Reflection1}       & \Tool      &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{Reflection2}     & \Tool        &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{Reflection2}     & \Tool        &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid  &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{Reflection3}    & \Tool         &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{Reflection3}    & \Tool         &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{Reflection4}   & \Tool          &  1  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid & 1  &  0  &  0  &  1  &  1  &  1  \\ 
+\multirow{2}{*}{Reflection4}   & \Tool          &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid & 1  &  0  &  0  \\
 \hline
-\multirow{2}{*}{SourceCodeSpecific1}   & \Tool  &  5  &  0  &  0  &  1  &  1  &  1  \\
-\cline{2-8}
-& TaintDroid &  5  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{SourceCodeSpecific1}   & \Tool  &  5  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid &  5  &  0  &  0  \\
 \hline
-\multirow{2}{*}{StaticInitialization1} & \Tool  &  1  &  0  &  0  &  1  &  1  &  1 \\
-\cline{2-8}
-& TaintDroid  &  1  &  0  &  0  &  1  &  1  &  1  \\
+\multirow{2}{*}{StaticInitialization1} & \Tool  &  1  &  0  &  0  \\
+\cline{2-5}
+& TaintDroid  &  1  &  0  &  0  \\
 \hline
 \hline
-\multirow{2}{*}{Total} & \Tool                   &   29  &    1  &    2  &         &         &        \\
-\cline{2-8}
-& TaintDroid  &   31  &   17  &    0  &         &         &         \\
-\hline
-\multirow{2}{*}{Average} & \Tool                 &      	&       &       &  0.98  &  0.97  &  0.96 (0.95)  \\  
-\cline{2-8}
-& TaintDroid &     &       &       &  0.66  &  1.00  &  0.66 (0.78)  \\
+\multirow{2}{*}{Total} & \Tool                   &   29  &    1  &    2  \\
+\cline{2-5}
+& TaintDroid  &   31  &   17  &    0  \\
 \hline
  \end{tabular}
 }% resizebox
  \end{center}
+ \vspace{-0.1in}
 \caption{\label{Ta:accuracyDBenchDetails}Detailed summary of the results of the H1 experiment described in \secref{overhead}}
 \end{small}
-\end{table}
+\end{table} 
 
 In \secref{practical}, we describe an experiment designed to evaluate our Bayesian analysis in ``pure'' form, i.e. without the support of information-flow tracking to detect relevant values. To make our description of this experiment complete, we include \tableref{realworldAll}, which provides a detailed summary of the results of this experiment across all benchmarks (including ones on which no leakages were detected).
 %%
 For comparability between the H-BD and T-BD configurations, we count different dynamic reports involving the same pair of source/sink APIs as a single leakage instance.
 
-\clearpage
+%\clearpage
+
+%\begin{table*}
+%\setlength{\tabcolsep}{0.3em}
+%\begin{small}
+%\begin{center}
+%\resizebox{\textwidth}{!}{
+%\begin{tabular}{|l|c|c||c|c|c|c|c|c|c||c|c|c|c|c|c|c|}
+%\hline
+% & & & \multicolumn{7}{c||}{} & \multicolumn{7}{c|}{}\\[-0.10in]
+%\multicolumn{1}{|c|}{\multirow{2}{*}{App}} & \multicolumn{1}{c|}{\multirow{2}{*}{Domain}} & \multicolumn{1}{c||}{\multirow{2}{*}{Deep crawl?}} & \multicolumn{7}{c||}{H-BD} & \multicolumn{7}{c|}{T-BD} \\
+%\cline{4-17}
+% & & & & & & & & & & & & & & & &\\[-0.10in]
+%&                          &                       &      Crashes      &      TPs      &      FPs      &      FNs      &      Precision      &      Recall      &      F-measure      &      Crashes      &      TPs      &      FPs      &      FNs      &      Precision      &      Recall      &      F-measure      \\
+%\hline
+%air.au.com.metro.DumbWaysToDie                    &       games/casual       &                       &      \checkmark   &      0        &      0        &      0        &      1              &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1        &      1              &      1      \\
+%at.nerbrothers.SuperJump                          &       games/arcade       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%{\bf atsoft.games.smgame                               }&{\bf       games/arcade       }&{\bf      \checkmark      }&{\bf            }&{\bf      4      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      4      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
+%{\bf com.antivirus                                     }&{\bf       communication       }&{\bf      \checkmark      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
+%{\bf com.appershopper.ios7lockscreen                   }&{\bf       personalization       }&{\bf            }&{\bf            }&{\bf      5      }&{\bf      1      }&{\bf      0      }&{\bf      0.833      }&{\bf      1      }&{\bf      0.909      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0.667      }&{\bf      0.8      }\\
+%com.applicaster.il.hotvod                         &       entertainment       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.appstar.callrecorder                          &       tools      &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.awesomecargames.mountainclimbrace\_1          &       games/racing       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%{\bf com.bestcoolfungames.antsmasher                   }&{\bf       games/arcade       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
+%com.bigduckgames.flow                             &       games/puzzles       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%{\bf com.bitfitlabs.fingerprint.lockscreen             }&{\bf       games/casual       }&{\bf            }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+%com.channel2.mobile.ui                           &       news       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.chillingo.parkingmaniafree.android.rowgplay  &       games/racing       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%{\bf com.cleanmaster.mguard                           }&{\bf       tools       }&{\bf      \checkmark      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
+%{\bf com.coolfish.cathairsalon                        }&{\bf       games/casual       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+%{\bf com.coolfish.snipershooting                      }&{\bf       games/action       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+%com.cube.gdpc.isr                                &       health \& fitness      &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.cyworld.camera                               &       photography       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.devuni.flashlight                            &       tools       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%{\bf com.digisoft.TransparentScreen                   }&{\bf       entertainment       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
+%com.domobile.applock       &       tools       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.dropbox.android       &       productivity       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.ea.game.fifa14\_row       &       games/sports       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.ebay.mobile       &       shopping       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.facebook.katana       &       social       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.facebook.orca       &       communication       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%{\bf com.g6677.android.cbaby       }&{\bf       games/casual       }&{\bf            }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+%{\bf com.g6677.android.chospital       }&{\bf       games/casual       }&{\bf            }&{\bf      \checkmark      }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+%{\bf com.g6677.android.design       }&{\bf       games/casual       }&{\bf            }&{\bf      \checkmark      }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+%{\bf com.g6677.android.pnailspa       }&{\bf       games/casual       }&{\bf            }&{\bf      \checkmark      }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+%{\bf com.g6677.android.princesshs       }&{\bf       games/casual       }&{\bf            }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+%com.gameclassic.towerblock       &       games/puzzles       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.gameloft.android.ANMP.GloftDMHM       &       games/casual       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.game.fruitlegendsaga       &       games/puzzles       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.gau.go.launcherex       &       personalization       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.glu.deerhunt2       &       games/arcade       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%{\bf com.goldtouch.mako       }&{\bf       news       }&{\bf      \checkmark      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
+%com.goldtouch.ynet       &       news       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.google.android.apps.docs       &       productivity       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.google.android.apps.translate       &       tools       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.google.android.youtube       &       media \& video      &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.google.earth       &       travel \& local      &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.halfbrick.fruitninjafree       &       games/arcade       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.halfbrick.jetpackjoyride       &       games/arcade       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.icloudzone.AsphaltMoto2       &       games/racing       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.ideomobile.hapoalim       &       finance       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.imangi.templerun2       &       games/arcade       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.kiloo.subwaysurf       &       games/arcade       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.king.candycrushsaga       &       games/arcade       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.sgiggle.production       &       social       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.skype.raider       &       communication       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.UBI.A90.WW       &       games/arcade       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.viber.voip       &       communication       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%com.whatsapp         &       communication       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+%\hline
+%\hline
+% & & & & & & & & & & & & & & & &\\[-0.10in]
+%Total                &             &      17      &      12      &      27      &      1      &      0      &                 &                 &                 &      22      &      13      &      0      &      9      &                 &                 &                 \\
+%\hline
+% & & & & & & & & & & & & & & & &\\[-0.10in]
+%Average              &             &              &              &              &         	  &             &      0.99      &      1.00      &      0.99 (0.98)      &              &              &             &             &      1.00     &      0.84      &      0.84 (0.74)      \\
+%\hline
+%\end{tabular}
+%}% resizebox
+%\end{center}
+%\caption{\label{Ta:realworldAll}Detailed summary of the results of the H2 experiment described in \secref{practical}}
+%\end{small}
+%\end{table*}
 
 \begin{table*}
 \setlength{\tabcolsep}{0.3em}
 \begin{small}
 \begin{center}
-\resizebox{\textwidth}{!}{
-\begin{tabular}{|l|c|c||c|c|c|c|c|c|c||c|c|c|c|c|c|c|}
+\resizebox{1\textwidth}{!}{
+\begin{tabular}{|l|c|c||c|c|c|c||c|c|c|c|}
 \hline
- & & & \multicolumn{7}{c||}{} & \multicolumn{7}{c|}{}\\[-0.10in]
-\multicolumn{1}{|c|}{\multirow{2}{*}{App}} & \multicolumn{1}{c|}{\multirow{2}{*}{Domain}} & \multicolumn{1}{c||}{\multirow{2}{*}{Deep crawl?}} & \multicolumn{7}{c||}{H-BD} & \multicolumn{7}{c|}{T-BD} \\
-\cline{4-17}
- & & & & & & & & & & & & & & & &\\[-0.10in]
-&                          &                       &      Crashes      &      TPs      &      FPs      &      FNs      &      Precision      &      Recall      &      F-measure      &      Crashes      &      TPs      &      FPs      &      FNs      &      Precision      &      Recall      &      F-measure      \\
+ & & & \multicolumn{4}{c||}{} & \multicolumn{4}{c|}{}\\[-0.10in]
+\multicolumn{1}{|c|}{\multirow{2}{*}{App}} & \multicolumn{1}{c|}{\multirow{2}{*}{Domain}} & \multicolumn{1}{c||}{\multirow{2}{*}{Deep crawl?}} & \multicolumn{4}{c||}{H-BD} & \multicolumn{4}{c|}{T-BD} \\
+\cline{4-11}
+& & & & & & & & & & \\[-0.10in]
+													&                          &                       &      Crashes      &      TPs      &      FPs      &      FNs      &      Crashes      &      TPs      &      FPs      &      FNs\\
 \hline
-air.au.com.metro.DumbWaysToDie                    &       games/casual       &                       &      \checkmark   &      0        &      0        &      0        &      1              &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1        &      1              &      1      \\
-at.nerbrothers.SuperJump                          &       games/arcade       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-{\bf atsoft.games.smgame                               }&{\bf       games/arcade       }&{\bf      \checkmark      }&{\bf            }&{\bf      4      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      4      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
-{\bf com.antivirus                                     }&{\bf       communication       }&{\bf      \checkmark      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
-{\bf com.appershopper.ios7lockscreen                   }&{\bf       personalization       }&{\bf            }&{\bf            }&{\bf      5      }&{\bf      1      }&{\bf      0      }&{\bf      0.833      }&{\bf      1      }&{\bf      0.909      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0.667      }&{\bf      0.8      }\\
-com.applicaster.il.hotvod                         &       entertainment       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.appstar.callrecorder                          &       tools      &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.awesomecargames.mountainclimbrace\_1          &       games/racing       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-{\bf com.bestcoolfungames.antsmasher                   }&{\bf       games/arcade       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
-com.bigduckgames.flow                             &       games/puzzles       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-{\bf com.bitfitlabs.fingerprint.lockscreen             }&{\bf       games/casual       }&{\bf            }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
-com.channel2.mobile.ui                           &       news       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.chillingo.parkingmaniafree.android.rowgplay  &       games/racing       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-{\bf com.cleanmaster.mguard                           }&{\bf       tools       }&{\bf      \checkmark      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
-{\bf com.coolfish.cathairsalon                        }&{\bf       games/casual       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
-{\bf com.coolfish.snipershooting                      }&{\bf       games/action       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
-com.cube.gdpc.isr                                &       health \& fitness      &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.cyworld.camera                               &       photography       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.devuni.flashlight                            &       tools       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-{\bf com.digisoft.TransparentScreen                   }&{\bf       entertainment       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
-com.domobile.applock       &       tools       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.dropbox.android       &       productivity       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.ea.game.fifa14\_row       &       games/sports       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.ebay.mobile       &       shopping       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.facebook.katana       &       social       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.facebook.orca       &       communication       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-{\bf com.g6677.android.cbaby       }&{\bf       games/casual       }&{\bf            }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
-{\bf com.g6677.android.chospital       }&{\bf       games/casual       }&{\bf            }&{\bf      \checkmark      }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
-{\bf com.g6677.android.design       }&{\bf       games/casual       }&{\bf            }&{\bf      \checkmark      }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
-{\bf com.g6677.android.pnailspa       }&{\bf       games/casual       }&{\bf            }&{\bf      \checkmark      }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
-{\bf com.g6677.android.princesshs       }&{\bf       games/casual       }&{\bf            }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
-com.gameclassic.towerblock       &       games/puzzles       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.gameloft.android.ANMP.GloftDMHM       &       games/casual       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.game.fruitlegendsaga       &       games/puzzles       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.gau.go.launcherex       &       personalization       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.glu.deerhunt2       &       games/arcade       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-{\bf com.goldtouch.mako       }&{\bf       news       }&{\bf      \checkmark      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      1      }&{\bf      1      }&{\bf      1      }\\
-com.goldtouch.ynet       &       news       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.google.android.apps.docs       &       productivity       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.google.android.apps.translate       &       tools       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.google.android.youtube       &       media \& video      &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.google.earth       &       travel \& local      &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.halfbrick.fruitninjafree       &       games/arcade       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.halfbrick.jetpackjoyride       &       games/arcade       &      \checkmark      &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.icloudzone.AsphaltMoto2       &       games/racing       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.ideomobile.hapoalim       &       finance       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.imangi.templerun2       &       games/arcade       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.kiloo.subwaysurf       &       games/arcade       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.king.candycrushsaga       &       games/arcade       &            &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      &      \checkmark      &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.sgiggle.production       &       social       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.skype.raider       &       communication       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.UBI.A90.WW       &       games/arcade       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.viber.voip       &       communication       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
-com.whatsapp         &       communication       &            &            &      0      &      0      &      0      &      1      &      1      &      1      &            &      0      &      0      &      0      &      1      &      1      &      1      \\
+& & & & & & & & & & \\[-0.10in]
+air.au.com.metro.DumbWaysToDie                    	&       games/casual       &                       &      \checkmark   &0&0&0&      \checkmark      &0&0&0\\
+at.nerbrothers.SuperJump                          	&       games/arcade       &            &            &0&0&0&      \checkmark      &0&0&0\\
+{\bf atsoft.games.smgame                               }&{\bf       games/arcade       }&{\bf      \checkmark      }&{\bf            }&{\bf      4      }&{\bf      0      }&{\bf      0      }&{\bf            }&{\bf      4      }&{\bf      0      }&{\bf      0      }\\
+{\bf com.antivirus                                     }&{\bf       communication       }&{\bf      \checkmark      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+{\bf com.appershopper.ios7lockscreen                   }&{\bf       personalization       }&{\bf            }&{\bf            }&{\bf      5      }&{\bf      1      }&{\bf      0      }&{\bf            }&{\bf      3      }&{\bf      0      }&{\bf     3      }\\
+com.applicaster.il.hotvod                         	&       entertainment       &      \checkmark      &            &0&0&0&            &0&0&0\\
+com.appstar.callrecorder                          	&       tools      &            &            &0&0&0&            &0&0&0\\
+com.awesomecargames.mountainclimbrace\_1          	&       games/racing       &            &      \checkmark      &0&0&0&      \checkmark      &0&0&0\\
+{\bf com.bestcoolfungames.antsmasher                   }&{\bf       games/arcade       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }\\
+com.bigduckgames.flow                             	&       games/puzzles       &            &            &0&0&0&      \checkmark      &0&0&0\\
+{\bf com.bitfitlabs.fingerprint.lockscreen             }&{\bf       games/casual       }&{\bf            }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf            }&{\bf      0      }&{\bf      0      }&{\bf      1      }\\
+com.channel2.mobile.ui                           	&       news       &      \checkmark      &            &0&0&0&            &0&0&0\\
+com.chillingo.parkingmaniafree.android.rowgplay  	&       games/racing       &            &      \checkmark      &0&0&0&      \checkmark      &0&0&0\\
+{\bf com.cleanmaster.mguard                           }&{\bf       tools       }&{\bf      \checkmark      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+{\bf com.coolfish.cathairsalon                        }&{\bf       games/casual       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }\\
+{\bf com.coolfish.snipershooting                      }&{\bf       games/action       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }\\
+com.cube.gdpc.isr                                	&       health \& fitness      &            &      \checkmark      &0&0&0&      \checkmark      &0&0&0\\
+com.cyworld.camera                               	&       photography       &            &            &0&0&0&            &0&0&0\\
+com.devuni.flashlight                            	&       tools       &      \checkmark      &            &0&0&0&            &0&0&0\\
+{\bf com.digisoft.TransparentScreen                   }&{\bf       entertainment       }&{\bf      \checkmark      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }&{\bf            }&{\bf      2      }&{\bf      0      }&{\bf      0      }\\
+com.domobile.applock       							&       tools       &      \checkmark      &            &0&0&0&            &0&0&0\\
+com.dropbox.android       							&       productivity       &      \checkmark      &            &0&0&0&      \checkmark      &0&0&0\\
+com.ea.game.fifa14\_row       						&       games/sports       &            &            &0&0&0&      \checkmark      &0&0&0\\
+com.ebay.mobile       								&       shopping       &            &            &0&0&0&            &0&0&0\\
+com.facebook.katana       							&       social       &      \checkmark      &            &0&0&0&            &0&0&0\\
+com.facebook.orca       							&       communication       &            &            &0&0&0&            &0&0&0\\
+{\bf com.g6677.android.cbaby       				   }&{\bf       games/casual       }&{\bf            }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }\\
+{\bf com.g6677.android.chospital       			   }&{\bf       games/casual       }&{\bf            }&{\bf      \checkmark      }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }\\
+{\bf com.g6677.android.design       			   }&{\bf       games/casual       }&{\bf            }&{\bf      \checkmark      }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }\\
+{\bf com.g6677.android.pnailspa       			   }&{\bf       games/casual       }&{\bf            }&{\bf      \checkmark      }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }\\
+{\bf com.g6677.android.princesshs       		   }&{\bf       games/casual       }&{\bf            }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf      \checkmark      }&{\bf      0      }&{\bf      0      }&{\bf      1      }\\
+com.gameclassic.towerblock       					&       games/puzzles       &      \checkmark      &            &0&0&0&      \checkmark      &0&0&0\\
+com.gameloft.android.ANMP.GloftDMHM       			&       games/casual       &            &            &0&0&0&            &0&0&0\\
+com.game.fruitlegendsaga       						&       games/puzzles       &            &            &0&0&0&            &0&0&0\\
+com.gau.go.launcherex       						&       personalization       &            &            &0&0&0&            &0&0&0\\
+com.glu.deerhunt2       							&       games/arcade       &            &      \checkmark      &0&0&0&      \checkmark      &0&0&0\\
+{\bf com.goldtouch.mako       					   }&{\bf       news       }&{\bf      \checkmark      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }&{\bf            }&{\bf      1      }&{\bf      0      }&{\bf      0      }\\
+com.goldtouch.ynet       							&       news       &      \checkmark      &            &0&0&0&            &0&0&0\\
+com.google.android.apps.docs       					&       productivity       &            &            &0&0&0&            &0&0&0\\
+com.google.android.apps.translate       			&       tools       &            &            &0&0&0&            &0&0&0\\
+com.google.android.youtube       					&       media \& video      &            &            &0&0&0&            &0&0&0\\
+com.google.earth       								&       travel \& local      &            &      \checkmark      &0&0&0&      \checkmark      &0&0&0\\
+com.halfbrick.fruitninjafree       					&       games/arcade       &            &            &0&0&0&            &0&0&0\\
+com.halfbrick.jetpackjoyride       					&       games/arcade       &      \checkmark      &            &0&0&0&            &0&0&0\\
+com.icloudzone.AsphaltMoto2       					&       games/racing       &            &            &0&0&0&      \checkmark      &0&0&0\\
+com.ideomobile.hapoalim       						&       finance       &            &            &0&0&0&            &0&0&0\\
+com.imangi.templerun2       						&       games/arcade       &            &      \checkmark      &0&0&0&      \checkmark      &0&0&0\\
+com.kiloo.subwaysurf       							&       games/arcade       &            &      \checkmark      &0&0&0&      \checkmark      &0&0&0\\
+com.king.candycrushsaga       						&       games/arcade       &            &      \checkmark      &0&0&0&      \checkmark      &0&0&0\\
+com.sgiggle.production       						&       social       &            &            &0&0&0&            &0&0&0\\
+com.skype.raider       								&       communication       &            &            &0&0&0&            &0&0&0\\
+com.UBI.A90.WW       								&       games/arcade       &            &            &0&0&0&            &0&0&0\\
+com.viber.voip       								&       communication       &            &            &0&0&0&            &0&0&0\\
+com.whatsapp         								&       communication       &            &            &0&0&0&            &0&0&0\\
 \hline
 \hline
- & & & & & & & & & & & & & & & &\\[-0.10in]
-Total                &             &      17      &      12      &      27      &      1      &      0      &                 &                 &                 &      22      &      13      &      0      &      9      &                 &                 &                 \\
-\hline
- & & & & & & & & & & & & & & & &\\[-0.10in]
-Average              &             &              &              &              &         	  &             &      0.99      &      1.00      &      0.99 (0.98)      &              &              &             &             &      1.00     &      0.84      &      0.84 (0.74)      \\
+ & & & & & & & & & & \\[-0.10in]
+Total                &             &      17      &      12      &      27      &      1      &      0      &      22      &      14      &      0      &      10      \\[0.04in]
 \hline
 \end{tabular}
 }% resizebox
 \end{center}
+\vspace{-0.1in}
 \caption{\label{Ta:realworldAll}Detailed summary of the results of the H2 experiment described in \secref{practical}}
 \end{small}
 \end{table*} 
-
 
