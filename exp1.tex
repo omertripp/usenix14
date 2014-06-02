@@ -72,22 +72,22 @@ The results obtained for both TaintDroid and \Tool\ on version 1.1 of DroidBench
 }
 
 Overall, TaintDroid detects 31 true leakages while also reporting 17 false positives, whereas \Tool\ suffers from 2 false negatives, discovering 29 of the true leakages while flagging only 1 false alarm. 
-The recall of both TaintDroid and \Tool\ is high (1 and 0.93, respectively) due to a low number of false negative results. 
-Yet, the precision of TaintDroid is much lower than that of \Tool\ (0.64 vs. 0.96), due to a high number of false positives. 
+The recall of both TaintDroid and \Tool\ is high (1 and 0.93, respectively) due to a low number of false-negative results. 
+Yet the precision of TaintDroid is much lower than that of \Tool\ (0.64 vs. 0.96), due to a high number of false positives. 
 The overall F-measure is thus lower for TaintDroid than for \Tool\ (0.78 vs. 0.94).
 %We averaged the F-measure calculation across all benchmarks (0.66 for TaintDroid vs 0.96 for \Tool).
 %We also provide the ``global'' score computed by considering all TP, FP and FN results together in parentheses  (0.78 vs 0.95).
 
 %We summarize the results as (i) the average across all app scores, shown outside the parentheses (0.96 for \Tool\ vs 0.69 for %TaintDroid), as well as (ii) the global accuracy score, computed as TPs / (TPs + FPs + Fns) (0.91 vs 0.65).
 
-The results mark \Tool\ as visibly more accurate than TaintDroid. To further confirm this result, we performed a two-tail McNemar test, considering 48 observations for each tool. These observations correspond to finding reported in \tableref{accuracyDBenchDetails}: 31 true positives and 17 that potentially trigger a false positive result. 
+The results mark \Tool\ as visibly more accurate than TaintDroid. To further confirm this result, we performed a two-tail McNemar test, considering 48 observations for each tool. These observations correspond to findings reported in \tableref{accuracyDBenchDetails}: 31 true positives and 17 classified as false alarms. 
 Each observation is a boolean value that represents the accuracy of the tool and is assumed to be from a Bernoulli distribution.
-We then checked whether the difference in accuracy is statistically significant by testing the null hypothesis that the set of 48 observations from TaintDroid comes from the same Bernoulli distribution as the set of 48 observations from \Tool.
+We then checked whether the difference in accuracy is statistically significant by testing the null hypothesis that the set of 48 observations from TaintDroid are sampled from the same Bernoulli distribution as the set of 48 observations from \Tool.
 
 We found that TaintDroid was accurate in 31 out of 48 cases, and \Tool\ was accurate in 45 out of 48 cases. We built the
 2$\times$2 contingency table showing when each tool was correct and applied a two-tail McNemar test.
 %using a calculator available online.\footnote{\href{http://vassarstats.net/propcorr.html}{http://vassarstats.net/propcorr.html}}
-We found a p-value of 0.001, which rejects the null hypothesis that the observations come from the same underlying distribution and provides evidence that \Tool\ is more accurate than TaintDroid, confirming H1.
+We found a p-value of 0.001, which rejects the null hypothesis that the observations come from the same underlying distribution and provides evidence that \Tool\ is more accurate than TaintDroid, thereby confirming H1.
 }
 
 %Welch's T-Test: an adaptation of Student's T-Test intended to test the null hypothesis that the two population means (in our case, average F-measures) are equal. Welch's variant of the T-Test is used when two samples potentially have unequal variances~\cite{Welch:1947}.

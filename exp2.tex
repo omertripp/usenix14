@@ -113,10 +113,10 @@ com.goldtouch.mako                     &       news               & \checkmark &
 As \tableref{realworldAccuracy} indicates,
 %, and \tableref{realworldAll} affirms more explicitly,
 the H-BD variant is more accurate than the T-BD variant overall (F-measure of 0.98 vs. 0.73).
-As in the experiment described in \secref{overhead}, we further performed a two-tail McNemar test, considering 67 observations for each tool: 27 that correspond to true positives, 1 to false positive and 39 to cases where no leakages were found.
+As in the experiment described in \secref{overhead}, we further performed a two-tail McNemar test, considering 67 observations for each tool: 27 that correspond to true positives, 1 to the false positive due to H-BD and 39 to cases where no leakages were found.
 
 We found that H-BD was accurate in 66 out of 67 cases, and T-DB was accurate in 54 out of 67 cases. 
-Building the 2$\times$2 contingency table and applying the two-tail McNemar test showed that the difference between the accuracy of the tools is significant (with the p-value of 0.001 to reject the null hypothesis that the accuracy observations for both tools come from the same Bernoulli distribution).
+Building the 2$\times$2 contingency table and applying the two-tail McNemar test showed that the difference between the tools in accuracy is significant (with a p-value of 0.001 to reject the null hypothesis that the accuracy observations for both tools come from the same Bernoulli distribution).
 Moreover, H-BD has a lower number of crashes and lower runtime overhead, which confirms H2.
 %Welch's T-Test on the F-Measure results to further confirm this observation. The test establishes that the difference between the accuracy of the tools is significant (p-value=0.003 $<$ 0.05).
 %Moreover, H-BD has a lower number of crashes and lower runtime overhead, which confirms H2.
